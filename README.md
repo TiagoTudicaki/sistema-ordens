@@ -1,18 +1,22 @@
-# Sistema de Ordem de serviço - Ar condicionado
+# Sistema de Ordens de Serviço - Ar-Condicionado
 
-Foi elaborado esse sistema pensando em 4 ações comuns na rotina de quem trabalha com ar condicionado: preventiva, corretiva, instalação e pmoc.
+Este sistema foi desenvolvido pensando em quatro ações comuns na rotina de profissionais de ar-condicionado: preventiva, corretiva, instalação e PMOC.
 
-Cada tipo de serviço possui uma abordagem especifica, com campos adaptados para cada situação. Na modalidade de instalação, o sistema conta com levantamento de materiais integrado.
+Cada tipo de serviço possui uma abordagem específica, com campos adaptados para cada situação. Na modalidade de instalação, o sistema conta com levantamento de materiais integrado, onde o usuário informa a quantidade de cada material e seus respectivos valores. A tabela ordens possui os campos materiais e custo_total para receber esses dados, que são enviados pelo front-end.
 
-# Tecnologias
+---
 
-- **Node.js** - ambiente de execução javascript no servidor
-- **Express** - framework para criação de API's e rotas HTTP
-- **cors** - middleware responsável de possibilitar comunicação entre front e back
-- **MySQL** - banco de dados relacional
-- **mysql2** - driver de conexão e execução de queries no MYSQL com suporte a promises
-- **dotenv** - gerenciamento de variáveis de ambiente
-- **nodemon** - ferramenta de desenvolvimento para reinício automático de servidor
+## Tecnologias
+
+- **Node.js** — ambiente de execução JavaScript no servidor
+- **Express** — framework para criação de APIs e rotas HTTP
+- **CORS** — middleware responsável por permitir a comunicação entre o front-end e o back-end
+- **MySQL** — banco de dados relacional
+- **mysql2** — driver de conexão e execução de queries no MySQL com suporte a Promises
+- **dotenv** — gerenciamento de variáveis de ambiente
+- **nodemon** — ferramenta de desenvolvimento para reinício automático do servidor
+
+---
 
 ## Estrutura do Projeto
 
@@ -20,37 +24,39 @@ Cada tipo de serviço possui uma abordagem especifica, com campos adaptados para
 sistema-ordens/
 ├── src/
 │   ├── config/
-│   │   └── database.js        # Conexão com o banco de dados
-│   ├── controllers/           # Recebe requisições e envia respostas
+│   │   └── database.js
+│   ├── controllers/
 │   │   ├── clienteController.js
 │   │   ├── equipamentoController.js
 │   │   ├── tecnicoController.js
 │   │   ├── precoController.js
 │   │   └── ordemController.js
-│   ├── services/              # Regras de negócio e validações
+│   ├── services/
 │   │   ├── clienteService.js
 │   │   ├── equipamentoService.js
 │   │   ├── tecnicoService.js
 │   │   ├── precoService.js
 │   │   └── ordemService.js
-│   ├── models/                # Consultas ao banco de dados
+│   ├── models/
 │   │   ├── clienteModel.js
 │   │   ├── equipamentoModel.js
 │   │   ├── tecnicoModel.js
 │   │   ├── precoModel.js
 │   │   └── ordemModel.js
-│   └── routes/                # Definição das rotas
+│   └── routes/
 │       ├── clienteRoute.js
 │       ├── equipamentoRoute.js
 │       ├── tecnicoRoute.js
 │       ├── precoRoute.js
 │       └── ordemRoute.js
-├── .env                       # Variáveis de ambiente (não versionado)
-├── .env.example               # Exemplo de configuração
+├── .env
+├── .env.example
 ├── app.js
 ├── server.js
 └── package.json
 ```
+
+---
 
 ## Como Instalar e Rodar
 
@@ -66,6 +72,7 @@ sistema-ordens/
 git clone https://github.com/TiagoTudicaki/sistema-ordens.git
 cd sistema-ordens
 ```
+
 **2. Instale as dependências**
 ```bash
 npm install
@@ -75,6 +82,7 @@ npm install
 ```bash
 cp .env.example .env
 ```
+
 Edite o arquivo `.env` com suas credenciais:
 ```env
 DB_HOST=localhost
@@ -87,7 +95,7 @@ PORT=3000
 
 **4. Crie o banco de dados**
 
-Execute o script SQL abaixo no MySQL Workbench ou via terminal:
+Execute no MySQL:
 
 ```sql
 CREATE DATABASE sistema_ordens;
@@ -160,7 +168,7 @@ CREATE TABLE ordens (
 npm run dev
 ```
 
-O servidor estará disponível em `http://localhost:3000`
+A aplicação estará disponível em `http://localhost:3000`
 
 ---
 
@@ -298,4 +306,4 @@ precos (tabela de referência de serviços)
 
 ## Autor
 
-Desenvolvido por **Tiago Tudiçaki** — Técnico em Refrigeração, estudando programação e buscando uma vaga de desenvolvedor júnior focado em back-end com JavaScript e Node.js.
+Desenvolvido por **Tiago Tudiçaki** — Mecânico em Refrigeração, em busca de uma vaga como desenvolvedor júnior com foco em back-end utilizando JavaScript e Node.js.
