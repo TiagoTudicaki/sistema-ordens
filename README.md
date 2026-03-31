@@ -1,5 +1,7 @@
 # Sistema de Ordens de Serviço - Ar-Condicionado
 
+> Projeto em evolução contínua conforme avanço nos estudos de back-end.
+
 Este sistema foi desenvolvido pensando em quatro ações comuns na rotina de profissionais de ar-condicionado: preventiva, corretiva, instalação e PMOC.
 
 Cada tipo de serviço possui uma abordagem específica, com campos adaptados para cada situação. Na modalidade de instalação, o sistema conta com levantamento de materiais integrado, onde o usuário informa a quantidade de cada material e seus respectivos valores. A tabela ordens possui os campos materiais e custo_total para receber esses dados, que são enviados pelo front-end.
