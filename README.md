@@ -1,10 +1,10 @@
-# Sistema de Ordens de Serviço - Ar-Condicionado
+# Sistema de Ordens de Serviço para Ar-Condicionado
 
-> Projeto em evolução contínua conforme avanço nos estudos de back-end.
+> Projeto em evolução contínua conforme o avanço nos estudos de back-end.
 
 Este sistema foi desenvolvido pensando em quatro ações comuns na rotina de profissionais de ar-condicionado: preventiva, corretiva, instalação e PMOC.
 
->O PMOC é um controle de manutenção exigido pelo Ministério da Saúde, onde a capacidade térmica de um ambiente seja igual ou acima de 5TR.
+>O PMOC é um controle de manutenção exigido pelo Ministério da Saúde, quando a capacidade térmica de um ambiente é igual ou superior 5TR.
 
 Cada tipo de serviço possui uma abordagem específica, com campos adaptados para cada situação. Na modalidade de instalação, o sistema conta com levantamento de materiais integrado, onde o usuário informa a quantidade de cada material e seus respectivos valores. A tabela ordens possui os campos materiais e custo_total para receber esses dados, que são enviados pelo front-end.
 
