@@ -1,78 +1,57 @@
-const conexao = require('../config/database');
-const db = require('../config/database');
-
+const db = require("../config/database");
 
 const clienteModel = {
 
-    async criar(dados){
+  async criar({ nome, cpf, telefone, endereco, cidade }) {
+    const [resultado] = await db.query(
+      "INSERT INTO clientes(nome, cpf, telefone, endereco,cidade)VALUES(?, ?, ?, ?, ?)",
+      [nome, cpf, telefone, endereco, cidade],
+    );
 
-        const{nome, cpf, telefone, endereco, cidade} = dados;
+    return {
+      id: resultado.insertId,
+      nome,
+      cpf,
+      telefone,
+      endereco,
+      cidade,
+    };
+  },
 
-        const[resultado] = await db.query(
-        'INSERT INTO clientes(nome, cpf, telefone, endereco,cidade)VALUES(?, ?, ?, ?, ?)',
-        [nome, cpf, telefone, endereco, cidade]
-        );
-        
-        
-        return {
-            id: resultado.insertId,
-            nome,
-            cpf,
-            telefone,
-            endereco,
-            cidade
-        };
-    },
+  async listar() {
+    const [clientes] = await db.query("SELECT * FROM clientes");
+    return clientes;
+  },
 
-    async listar(){
+  async buscarPorId(id) {
+    const [cliente] = await db.query("SELECT * FROM clientes WHERE id = ?", [
+      id,
+    ]);
 
-        const[clientes] = await db.query(
-            'SELECT * FROM clientes'
-        );
-        return clientes;
-    },
+    return cliente[0];
+  },
 
-    async buscarPorId(id){
+  async atualizar(id, { nome, cpf, telefone, endereco, cidade }) {
+    const [atualizado] = await db.query(
+      "UPDATE clientes SET nome = ?, cpf = ?, telefone = ?, endereco = ?, cidade = ? WHERE  id = ?",
+      [nome, cpf, telefone, endereco, cidade, id],
+    );
 
-        const [cliente] = await db.query(
-            'SELECT * FROM clientes WHERE id = ?',
-            [id]
-        );
+    return {
+      id,
+      nome,
+      cpf,
+      telefone,
+      endereco,
+      cidade,
+    };
+  },
 
-        return cliente[0];
-    },
+  async excluir(id) {
+    await db.query("DELETE FROM clientes WHERE id = ?", [id]);
 
-    async atualizar(id,dados){
-
-        
-        const {nome, cpf, telefone, endereco,cidade} = dados
-
-        const[atualizado] = await db.query(
-            'UPDATE clientes SET nome = ?, cpf = ?, telefone = ?, endereco = ?, cidade = ? WHERE  id = ?',
-                [nome, cpf, telefone,endereco,cidade,id]
-        );
-
-        return{
-            id,
-            nome,
-            cpf,
-            telefone,
-            endereco,
-            cidade
-        };
-    },
-
-    async excluir(id){
-
-        await db.query(
-            'DELETE FROM clientes WHERE id = ?',
-            [id]
-
-        );
-
-        return{mensagem:'Cliente excluido'}
-
-    }
-}
+    return { mensagem: "Cliente excluido" };
+  },
+};
 
 module.exports = clienteModel;

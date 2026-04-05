@@ -1,63 +1,35 @@
+const clienteModel = require("../models/clienteModel");
 
-const clienteModel = require('../models/clienteModel');
 const clienteService = {
-    async criar(dados){
-        
+    
+  async criar(dados) {
+    const cliente = await clienteModel.criar(dados);
+    return cliente;
+  },
 
-            const{nome, cpf, telefone, endereco, cidade} = dados;
+  async listar() {
+    const clientes = await clienteModel.listar();
 
-            if(!nome) throw new Error("Nome é obrigatório");
-            if(!cpf) throw new Error("CPF é obrigatório");
-            if(!telefone) throw new Error("Telefone é obrigatório");
-            if(!endereco) throw new Error("Endereço é obrigatório");
-            if(!cidade) throw new Error("Cidade é obrigatório");
+    return clientes;
+  },
 
-            const cliente = await clienteModel.criar(dados);
-            return cliente;
-       
-    },
+  async buscarPorId(id) {
+    const cliente = await clienteModel.buscarPorId(id);
 
-    async listar(){
-        
-        const clientes = await clienteModel.listar();
+    if (!cliente) throw new Error("Cliente não encontrado");
 
-        return clientes;
-     
-    },
+    return cliente;
+  },
 
-    async buscarPorId(id){
+  async atualizar(id, dados) {
+    const cliente = await clienteModel.atualizar(id, dados);
+    return cliente;
+  },
 
-        const cliente = await clienteModel.buscarPorId(id);
-
-        if(!cliente) throw new Error('Cliente não encontrado');
-        
-
-        return cliente;
-
-    },
-
-    async atualizar(id, dados){
-
-        const {nome, cpf, telefone, endereco, cidade} = dados;
-
-        if(!nome) throw new Error("Nome é obrigatório");
-        if(!cpf) throw new Error("CPF é obrigatório");
-        if(!telefone) throw new Error("Telefone é obrigatório");
-        if(!endereco) throw new Error("Endereço é obrigatório");
-        if(!cidade)  throw new Error("Cidade é obrigatório")
-
-          const cliente = await clienteModel.atualizar(id,dados);
-          return cliente;  
-    },
-
-    async excluir(id){
-
-        const cliente = await clienteModel.excluir(id);
-        return cliente;
-        
-    }
-
-
-}
+  async excluir(id) {
+    const cliente = await clienteModel.excluir(id);
+    return cliente;
+  },
+};
 
 module.exports = clienteService;
