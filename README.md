@@ -310,4 +310,8 @@ precos (tabela de referência de serviços)
 
 ## Autor
 
+<<<<<<< HEAD
 Desenvolvido por **Tiago Tudiçaki** — Profissional com quase duas décadas de experiência em Refrigeração e Ar-Condicionado, Técnico em Desenvolvimento de Sistemas, em busca de uma vaga como desenvolvedor júnior com foco em back-end utilizando JavaScript e Node.js.
+=======
+Desenvolvido por **Tiago Tudiçaki** — Mecânico em Refrigeração, em busca de uma vaga como desenvolvedor júnior com foco em back-end utilizando JavaScript e Node.js.
+>>>>>>> e800c43a0197423691fd029016c1ff64c7933dbf
