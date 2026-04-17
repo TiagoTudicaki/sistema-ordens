@@ -1,28 +1,30 @@
 const tecnicoService = require("../services/tecnicoService");
+const tratarErro = require("../utils/tratarErro");
+const { validarCamposVazios } = require("../utils/validarCampos");
 
 const tecnicoController = {
-    
   async criar(req, res) {
     try {
       const { nome, especialidade, matricula, telefone } = req.body;
 
-      if (!nome?.trim() || !especialidade?.trim() || !matricula?.trim() || !telefone?.trim()) {
+      const camposObrigatorios = { nome, especialidade, matricula, telefone };
+
+      const camposVazios = validarCamposVazios(camposObrigatorios);
+
+      if (camposVazios) {
         return res
           .status(400)
           .json({
-            erro: "Os campos (Nome, Especialidade, Matricula e telefone) são necessário",
+            erro: "Os campos Nome, Especialidade, Matrícula, Telefone são obrigatórios",
           });
       }
 
-      const tecnico = await tecnicoService.criar({
-        nome,
-        especialidade,
-        matricula,
-        telefone,
-      });
+      const dados = { nome, especialidade, matricula, telefone };
+
+      const tecnico = await tecnicoService.criar(dados);
       res.status(201).json(tecnico);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -31,7 +33,7 @@ const tecnicoController = {
       const tecnicos = await tecnicoService.listar();
       res.status(200).json(tecnicos);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -47,7 +49,7 @@ const tecnicoController = {
 
       res.status(200).json(tecnico);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -72,7 +74,7 @@ const tecnicoController = {
       const tecnico = await tecnicoService.atualizar(id, dados);
       res.status(200).json(tecnico);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -88,7 +90,7 @@ const tecnicoController = {
 
       res.status(200).json({ message: "Tecnico excluido com sucesso" });
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 };

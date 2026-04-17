@@ -1,19 +1,22 @@
 const precoService = require("../services/precoService");
+const tratarErro = require("../utils/tratarErro");
+const { validarCamposVazios } = require("../utils/validarCampos");
 
 const precoController = {
   async criar(req, res) {
     try {
       const { codigo, descricao, preco_uni, unidade } = req.body;
 
-      if (
-        !codigo?.trim() ||
-        !descricao?.trim() ||
-        !preco_uni ||
-        !unidade?.trim()
-      ) {
-        return res.status(400).json({
-          erro: "Os campos(codigo, descrição, preco_uni e unidade) são necessários ",
-        });
+      const camposObrigatorios = { codigo, descricao, preco_uni, unidade };
+
+      const camposVazios = validarCamposVazios(camposObrigatorios);
+
+      if (camposVazios) {
+        return res
+          .status(400)
+          .json({
+            erro: "Os campos codigo, descricao, preco_uni, unidade são obrigatórios",
+          });
       }
 
       const dados = { codigo, descricao, preco_uni, unidade };
@@ -22,7 +25,7 @@ const precoController = {
 
       res.status(201).json(preco);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -31,7 +34,7 @@ const precoController = {
       const precos = await precoService.listar();
       res.status(200).json(precos);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -46,7 +49,7 @@ const precoController = {
       const preco = await precoService.buscarPorId(id);
       res.status(200).json(preco);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -71,7 +74,7 @@ const precoController = {
       const preco = await precoService.atualizar(id, dados);
       res.status(200).json(preco);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -86,7 +89,7 @@ const precoController = {
       await precoService.excluir(id);
       res.status(200).json({ mensagem: "Preco excluido com sucesso" });
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 };
