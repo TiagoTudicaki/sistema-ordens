@@ -1,7 +1,6 @@
 const db = require("../config/database");
 
 const clienteModel = {
-
   async criar({ nome, cpf, telefone, endereco, cidade }) {
     const [resultado] = await db.query(
       "INSERT INTO clientes(nome, cpf, telefone, endereco,cidade)VALUES(?, ?, ?, ?, ?)",
@@ -32,25 +31,20 @@ const clienteModel = {
   },
 
   async atualizar(id, { nome, cpf, telefone, endereco, cidade }) {
-    const [atualizado] = await db.query(
+    const [resultado] = await db.query(
       "UPDATE clientes SET nome = ?, cpf = ?, telefone = ?, endereco = ?, cidade = ? WHERE  id = ?",
       [nome, cpf, telefone, endereco, cidade, id],
     );
 
-    return {
-      id,
-      nome,
-      cpf,
-      telefone,
-      endereco,
-      cidade,
-    };
+    return resultado;
   },
 
   async excluir(id) {
-    await db.query("DELETE FROM clientes WHERE id = ?", [id]);
+    const [resultado] = await db.query("DELETE FROM clientes WHERE id = ?", [
+      id,
+    ]);
 
-    return { mensagem: "Cliente excluido" };
+    return resultado;
   },
 };
 

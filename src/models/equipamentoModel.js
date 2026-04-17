@@ -1,17 +1,28 @@
 const db = require("../config/database");
 
 const equipamentoModel = {
-  async criar({ cliente_id, tipo, marca, modelo, serie, tipo_gas }) {
+  async criar({
+    cliente_id,
+    tipo,
+    local,
+    identificador,
+    marca,
+    modelo,
+    serie,
+    tipo_gas,
+  }) {
     const [equipamentoNovo] = await db.query(
       `
-            INSERT INTO  equipamentos(cliente_id, tipo, marca, modelo, serie, tipo_gas)VALUES(?, ?, ?, ?, ?, ?)`,
-      [cliente_id, tipo, marca, modelo, serie, tipo_gas],
+            INSERT INTO  equipamentos(cliente_id, tipo, local, identificador, marca, modelo, serie, tipo_gas)VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
+      [cliente_id, tipo, local, identificador, marca, modelo, serie, tipo_gas],
     );
 
     return {
       id: equipamentoNovo.insertId,
       cliente_id,
       tipo,
+      local,
+      identificador,
       marca,
       modelo,
       serie,
@@ -34,16 +45,31 @@ const equipamentoModel = {
     return equipamento[0];
   },
 
-  async atualizar(id, { cliente_id, tipo, marca, modelo, serie, tipo_gas }) {
+  async atualizar(
+    id,
+    { cliente_id, tipo, local, identificador, marca, modelo, serie, tipo_gas },
+  ) {
     const [equipamentoAtualizado] = await db.query(
-      "UPDATE equipamentos SET cliente_id = ?, tipo = ?, marca = ?, modelo = ?, serie = ?, tipo_gas = ?   WHERE id = ?",
-      [cliente_id, tipo, marca, modelo, serie, tipo_gas, id],
+      "UPDATE equipamentos SET cliente_id = ?, tipo = ?,local = ?, identificador = ?, marca = ?, modelo = ?, serie = ?, tipo_gas = ?   WHERE id = ?",
+      [
+        cliente_id,
+        tipo,
+        local,
+        identificador,
+        marca,
+        modelo,
+        serie,
+        tipo_gas,
+        id,
+      ],
     );
 
     return {
       id,
       cliente_id,
       tipo,
+      local,
+      identificador,
       marca,
       modelo,
       serie,

@@ -1,38 +1,36 @@
 const clienteService = require("../services/clienteService");
+const { tratarErro } = require("../utils/tratarErro");
 
 const clienteController = {
-  
   async criar(req, res) {
     try {
-      const { nome, cpf, telefone, endereco, cidade } = req.body;
+      const dados = req.body;
 
-      if (
-        !nome?.trim() ||
-        !cpf?.trim() ||
-        !telefone?.trim() ||
-        !endereco?.trim() ||
-        !cidade?.trim()
-      ) {
-        return res
-          .status(400)
-          .json({ erro: "Todos os campos são obrigatórios" });
+      if (!dados || Object.keys(dados).length === 0) {
+        return res.status(400).json({ erro: "Requisição inválida" });
       }
 
-      const dados = { nome, cpf, telefone, endereco, cidade };
+      const cliente = {
+        nome: dados.nome,
+        cpf: dados.cpf,
+        telefone: dados.telefone,
+        endereco: dados.endereco,
+        cidade: dados.cidade,
+      };
 
-      const cliente = await clienteService.criar(dados);
-      res.status(201).json(cliente);
+      const clienteNovo = await clienteService.criar(cliente);
+      return res.status(201).json(clienteNovo);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
   async listar(req, res) {
     try {
       const clientes = await clienteService.listar();
-      res.json(clientes);
+      return res.status(200).json(clientes);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -40,14 +38,14 @@ const clienteController = {
     try {
       const { id } = req.params;
 
-      if (!id || isNaN(id)) {
+      if (!id || isNaN(Number(id))) {
         return res.status(400).json({ erro: "ID Inválido" });
       }
 
       const cliente = await clienteService.buscarPorId(id);
-      res.json(cliente);
+      return res.status(200).json(cliente);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -55,11 +53,11 @@ const clienteController = {
     try {
       const { id } = req.params;
 
-      if (!id || isNaN(id)) {
+      if (!id || isNaN(Number(id))) {
         return res.status(400).json({ erro: "ID Inválido" });
       }
 
-      if (Object.values(req.body).every((campo) => !campo)) {
+      if (Object.values(req.body).every((campo) => !campo?.trim())) {
         return res
           .status(400)
           .json({ erro: "É obrigatório atualizar pelo menos um campo" });
@@ -71,9 +69,9 @@ const clienteController = {
 
       const cliente = await clienteService.atualizar(id, dados);
 
-      res.status(200).json(cliente);
+      return res.status(200).json(cliente);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -81,15 +79,15 @@ const clienteController = {
     try {
       const { id } = req.params;
 
-      if (!id || isNaN(id)) {
+      if (!id || isNaN(Number(id))) {
         return res.status(400).json({ erro: "ID Inválido" });
       }
 
       await clienteService.excluir(id);
 
-      res.status(200).json({ message: "Cliente excluido com sucesso" });
+      return res.status(200).json({ message: "Cliente excluido com sucesso" });
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 };
