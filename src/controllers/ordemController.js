@@ -1,4 +1,5 @@
 const ordemService = require("../services/ordemService");
+const tratarErro = require("../utils/tratarErro");
 
 const ordemController = {
   async criar(req, res) {
@@ -17,9 +18,15 @@ const ordemController = {
         checklist,
       } = req.body;
 
-      if (!cliente_id || !equipamento_id || !tipo_servico) {
+      if (!cliente_id || isNaN(Number(cliente_id))) {
         return res.status(400).json({
-          erro: "É Obrigatório informar o Id do cliente, ID do equipamento e o tipo serviço",
+          erro: "cliente_id inválido",
+        });
+      }
+
+      if(!tipo_servico?.trim()){
+        return res.status(400).json({
+          erro:"tipo_servico inválido",
         });
       }
 
@@ -40,7 +47,7 @@ const ordemController = {
       const ordem = await ordemService.criar(dados);
       res.status(201).json(ordem);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+     return tratarErro(res, erro);
     }
   },
 
@@ -49,7 +56,7 @@ const ordemController = {
       const ordens = await ordemService.listar();
       res.status(200).json(ordens);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -64,7 +71,7 @@ const ordemController = {
       const ordem = await ordemService.buscarPorId(id);
       res.status(200).json(ordem);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 
@@ -113,7 +120,7 @@ const ordemController = {
       const ordem = await ordemService.atualizar(id, dados);
       res.status(200).json(ordem);
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+     return tratarErro(res, erro);
     }
   },
 
@@ -128,7 +135,7 @@ const ordemController = {
       await ordemService.excluir(id);
       res.status(200).json({ mensagem: "Ordem excluída com sucesso" });
     } catch (erro) {
-      res.status(500).json({ erro: erro.message });
+      return tratarErro(res, erro);
     }
   },
 };
