@@ -4,6 +4,4 @@ function tratarErro(res, erro) {
   });
 }
 
-
-
 module.exports = { tratarErro };

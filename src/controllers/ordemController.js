@@ -24,9 +24,9 @@ const ordemController = {
         });
       }
 
-      if(!tipo_servico?.trim()){
+      if (!tipo_servico?.trim()) {
         return res.status(400).json({
-          erro:"tipo_servico inválido",
+          erro: "tipo_servico inválido",
         });
       }
 
@@ -47,7 +47,7 @@ const ordemController = {
       const ordem = await ordemService.criar(dados);
       res.status(201).json(ordem);
     } catch (erro) {
-     return tratarErro(res, erro);
+      return tratarErro(res, erro);
     }
   },
 
@@ -120,7 +120,7 @@ const ordemController = {
       const ordem = await ordemService.atualizar(id, dados);
       res.status(200).json(ordem);
     } catch (erro) {
-     return tratarErro(res, erro);
+      return tratarErro(res, erro);
     }
   },
 

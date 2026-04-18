@@ -12,11 +12,9 @@ const tecnicoController = {
       const camposVazios = validarCamposVazios(camposObrigatorios);
 
       if (camposVazios) {
-        return res
-          .status(400)
-          .json({
-            erro: "Os campos Nome, Especialidade, Matrícula, Telefone são obrigatórios",
-          });
+        return res.status(400).json({
+          erro: "Os campos Nome, Especialidade, Matrícula, Telefone são obrigatórios",
+        });
       }
 
       const dados = { nome, especialidade, matricula, telefone };

@@ -96,7 +96,7 @@ const ordemModel = {
       [id],
     );
 
-    if(!ordem[0]){
+    if (!ordem[0]) {
       const erro = new Error("Ordem não encontrada");
       erro.status = 404;
       throw erro;

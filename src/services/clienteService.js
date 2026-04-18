@@ -14,12 +14,16 @@ const {
   padronizarEndereco,
   limparTelefone,
 } = require("../utils/padronizarDados");
+const {
+  consultaFiltrada,
+  filtraConsultaEndereco,
+} = require("../utils/filtragemDeConsulta");
 
 const clienteService = {
   async criar(dados) {
     const { nome, cpf, telefone, endereco, cidade } = dados;
 
-    // 1. valida obrigatórios PRIMEIRO
+    // valida obrigatórios
     const vazios = validarCamposVazios({
       nome,
       cpf,
@@ -32,7 +36,7 @@ const clienteService = {
       throw new Error(`Campos vazios: ${vazios.join(", ")}`);
     }
 
-    // 2. valida formato no bruto
+    // valida formato no bruto
     if (!campoNomeSomenteTexto(nome)) {
       throw new Error("Nome deve conter apenas letras e espaços");
     }
@@ -55,7 +59,7 @@ const clienteService = {
       throw new Error("CPF inválido: cpf deve conter somente números");
     }
 
-    // 3. sanitiza depois da validação
+    // sanitiza depois da validação
     if (limparCPF(cpf).length !== 11) {
       throw new Error("CPF deve conter 11 dígitos");
     }
@@ -75,7 +79,7 @@ const clienteService = {
       cidade: padronizarTexto(cidade),
     };
 
-    // 4. persistência
+    // persistência
     try {
       return await clienteModel.criar(campos);
     } catch (erro) {
@@ -86,8 +90,55 @@ const clienteService = {
       throw erro;
     }
   },
-  async listar() {
-    return await clienteModel.listar();
+  async listar(campos) {
+    const filtrosValidos = consultaFiltrada(campos);
+
+    const { nome, cpf, telefone, endereco, cidade } = filtrosValidos;
+
+    if (nome && !campoNomeSomenteTexto(nome)) {
+      throw new Error("Nome deve conter apenas letras e espaços");
+    }
+
+    if (cidade && !campoCidadeSomenteTexto(cidade)) {
+      throw new Error("Cidade deve conter apenas letras e espaços");
+    }
+
+    if (endereco && !filtraConsultaEndereco(endereco)) {
+      throw new Error(
+        "Endereço inválido: mínimo 1 caracteres, apenas letras, números, espaços, vírgula, ponto e hífen",
+      );
+    }
+
+    if (telefone && telefoneContemCaracterInvalido(telefone)) {
+      throw new Error("Telefone contém caracteres inválidos");
+    }
+
+    if (cpf && cpfContemCaracterInvalido(cpf)) {
+      throw new Error("CPF inválido: cpf deve conter somente números");
+    }
+
+    const filtrosNormalizados = {};
+
+    if (nome) filtrosNormalizados.nome = padronizarTexto(nome);
+    if (cpf) filtrosNormalizados.cpf = limparCPF(cpf);
+    if (telefone) filtrosNormalizados.telefone = limparTelefone(telefone);
+    if (endereco) filtrosNormalizados.endereco = padronizarEndereco(endereco);
+    if (cidade) filtrosNormalizados.cidade = padronizarTexto(cidade);
+
+    if (filtrosNormalizados.cpf && filtrosNormalizados.cpf.length !== 11) {
+      throw new Error("CPF deve conter 11 dígitos");
+    }
+
+    if (filtrosNormalizados.telefone) {
+      if (
+        filtrosNormalizados.telefone.length < 10 ||
+        filtrosNormalizados.telefone.length > 11
+      ) {
+        throw new Error("Telefone deve conter 10 ou 11 dígitos");
+      }
+    }
+
+    return await clienteModel.listar(filtrosNormalizados);
   },
 
   async buscarPorId(id) {

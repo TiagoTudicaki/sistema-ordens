@@ -1,8 +1,6 @@
 const db = require("../config/database");
 
-
 const precoModel = {
-
   async criar({ codigo, descricao, preco_uni, unidade }) {
     const [precoNovo] = await db.query(
       "INSERT INTO precos(codigo, descricao, preco_uni, unidade)VALUES(?, ?, ?, ?)",

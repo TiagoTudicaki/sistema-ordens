@@ -27,7 +27,15 @@ const clienteController = {
 
   async listar(req, res) {
     try {
-      const clientes = await clienteService.listar();
+      const campos = {
+        nome: req.query.nome,
+        cpf: req.query.cpf,
+        telefone: req.query.telefone,
+        endereco: req.query.endereco,
+        cidade: req.query.cidade,
+      };
+
+      const clientes = await clienteService.listar(campos);
       return res.status(200).json(clientes);
     } catch (erro) {
       return tratarErro(res, erro);

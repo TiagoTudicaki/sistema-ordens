@@ -1,7 +1,6 @@
 const precoModel = require("../models/precoModel");
 
 const precoService = {
-    
   async criar(dados) {
     const preco = await precoModel.criar(dados);
     return preco;

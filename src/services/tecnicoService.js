@@ -1,7 +1,6 @@
 const tecnicoModel = require("../models/tecnicoModel");
 
 const tecnicoService = {
-    
   async criar(dados) {
     const tecnico = await tecnicoModel.criar(dados);
 

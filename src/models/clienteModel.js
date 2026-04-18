@@ -17,8 +17,41 @@ const clienteModel = {
     };
   },
 
-  async listar() {
-    const [clientes] = await db.query("SELECT * FROM clientes");
+  async listar(filtrosNormalizados) {
+    let sql = "SELECT id, nome, cpf, telefone, endereco, cidade FROM  clientes";
+    const condicoes = [];
+    const valores = [];
+
+    if (filtrosNormalizados.nome) {
+      condicoes.push("nome LIKE ?");
+      valores.push(`%${filtrosNormalizados.nome}%`);
+    }
+
+    if (filtrosNormalizados.cpf) {
+      condicoes.push("cpf = ?");
+      valores.push(`%${filtrosNormalizados.cpf}%`);
+    }
+
+    if (filtrosNormalizados.telefone) {
+      condicoes.push("telefone = ?");
+      valores.push(`%${filtrosNormalizados.telefone}%`);
+    }
+
+    if (filtrosNormalizados.endereco) {
+      condicoes.push("endereco LIKE ?");
+      valores.push(`%${filtrosNormalizados.endereco}%`);
+    }
+
+    if (filtrosNormalizados.cidade) {
+      condicoes.push("cidade LIKE ?");
+      valores.push(`%${filtrosNormalizados.cidade}%`);
+    }
+
+    if (condicoes.length > 0) {
+      sql += " WHERE " + condicoes.join(" AND ");
+    }
+
+    const [clientes] = await db.query(sql, valores);
     return clientes;
   },
 

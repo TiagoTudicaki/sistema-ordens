@@ -1,7 +1,6 @@
 const ordemModel = require("../models/ordemModel");
 
 const ordemService = {
-    
   async criar(dados) {
     const ordem = await ordemModel.criar(dados);
 

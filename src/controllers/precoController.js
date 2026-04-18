@@ -12,11 +12,9 @@ const precoController = {
       const camposVazios = validarCamposVazios(camposObrigatorios);
 
       if (camposVazios) {
-        return res
-          .status(400)
-          .json({
-            erro: "Os campos codigo, descricao, preco_uni, unidade são obrigatórios",
-          });
+        return res.status(400).json({
+          erro: "Os campos codigo, descricao, preco_uni, unidade são obrigatórios",
+        });
       }
 
       const dados = { codigo, descricao, preco_uni, unidade };
