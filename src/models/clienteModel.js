@@ -56,11 +56,11 @@ const clienteModel = {
   },
 
   async buscarPorId(id) {
-    const [cliente] = await db.query("SELECT * FROM clientes WHERE id = ?", [
+    const [rows] = await db.query("SELECT * FROM clientes WHERE id = ?", [
       id,
     ]);
 
-    return cliente[0];
+    return rows[0];
   },
 
   async atualizar(id, { nome, cpf, telefone, endereco, cidade }) {

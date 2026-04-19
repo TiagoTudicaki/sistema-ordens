@@ -154,14 +154,75 @@ const clienteService = {
   },
 
   async atualizar(id, dados) {
-    const resultado = await clienteModel.atualizar(id, dados);
+    if (
+      Object.values(dados).every(
+        (campo) => campo == null || String(campo).trim() === "",
+      )
+    ) {
+      throw new Error(
+        "É obrigatório informar ao menos um campo para atualização",
+      );
+    }
+
+    const camposVazios = validarCamposVazios(dados);
+
+    if (camposVazios.length > 0) {
+      throw new Error("Campos não podem ser vazios ou com apenas espaços");
+    }
+
+    const { nome, cpf, telefone, endereco, cidade } = dados;
+
+    if (nome && !campoNomeSomenteTexto(nome)) {
+      throw new Error("Nome deve conter apenas letras e espaços");
+    }
+
+    if (cidade && !campoCidadeSomenteTexto(cidade)) {
+      throw new Error("Cidade deve conter apenas letras e espaços");
+    }
+
+    if (endereco && !filtraConsultaEndereco(endereco)) {
+      throw new Error(
+        "Endereço inválido: mínimo 1 caracteres, apenas letras, números, espaços, vírgula, ponto e hífen",
+      );
+    }
+
+    if (telefone && telefoneContemCaracterInvalido(telefone)) {
+      throw new Error("Telefone contém caracteres inválidos");
+    }
+
+    if (cpf && cpfContemCaracterInvalido(cpf)) {
+      throw new Error("CPF inválido: cpf deve conter somente números");
+    }
+
+    const filtrosNormalizados = {};
+
+    if (nome) filtrosNormalizados.nome = padronizarTexto(nome);
+    if (cpf) filtrosNormalizados.cpf = limparCPF(cpf);
+    if (telefone) filtrosNormalizados.telefone = limparTelefone(telefone);
+    if (endereco) filtrosNormalizados.endereco = padronizarEndereco(endereco);
+    if (cidade) filtrosNormalizados.cidade = padronizarTexto(cidade);
+
+    if (filtrosNormalizados.cpf && filtrosNormalizados.cpf.length !== 11) {
+      throw new Error("CPF deve conter 11 dígitos");
+    }
+
+    if (filtrosNormalizados.telefone) {
+      if (
+        filtrosNormalizados.telefone.length < 10 ||
+        filtrosNormalizados.telefone.length > 11
+      ) {
+        throw new Error("Telefone deve conter 10 ou 11 dígitos");
+      }
+    }
+
+    const resultado = await clienteModel.atualizar(id, filtrosNormalizados);
 
     if (resultado.affectedRows === 0) {
       const erro = new Error("Cliente não encontrado");
       erro.status = 404;
       throw erro;
     }
-    return { id, ...dados };
+    return { id, ...filtrosNormalizados };
   },
 
   async excluir(id) {

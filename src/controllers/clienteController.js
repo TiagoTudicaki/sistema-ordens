@@ -65,7 +65,7 @@ const clienteController = {
         return res.status(400).json({ erro: "ID Inválido" });
       }
 
-      if (Object.values(req.body).every((campo) => !campo?.trim())) {
+      if (Object.values(req.body).every((campo) => campo == null || String(campo).trim() === "")) {
         return res
           .status(400)
           .json({ erro: "É obrigatório atualizar pelo menos um campo" });
