@@ -141,8 +141,12 @@ const clienteService = {
     return await clienteModel.listar(filtrosNormalizados);
   },
 
-  async buscarPorId(id) {
-    const resultado = await clienteModel.buscarPorId(id);
+  async buscarPorId(clienteId) {
+    if (clienteId == null || Number.isNaN(clienteId)) {
+      throw new Error("ID inválido");
+    }
+
+    const resultado = await clienteModel.buscarPorId(clienteId);
 
     if (!resultado) {
       const erro = new Error("Cliente não encontrado");
@@ -153,7 +157,11 @@ const clienteService = {
     return resultado;
   },
 
-  async atualizar(id, dados) {
+  async atualizar(clienteId, dados) {
+    if (clienteId == null || Number.isNaN(clienteId)) {
+      throw new Error("ID inválido");
+    }
+
     if (
       Object.values(dados).every(
         (campo) => campo == null || String(campo).trim() === "",
@@ -215,18 +223,24 @@ const clienteService = {
       }
     }
 
-    const resultado = await clienteModel.atualizar(id, filtrosNormalizados);
+    const resultado = await clienteModel.atualizar(
+      clienteId,
+      filtrosNormalizados,
+    );
 
     if (resultado.affectedRows === 0) {
       const erro = new Error("Cliente não encontrado");
       erro.status = 404;
       throw erro;
     }
-    return { id, ...filtrosNormalizados };
+    return { clienteId, ...filtrosNormalizados };
   },
 
-  async excluir(id) {
-    const resultado = await clienteModel.excluir(id);
+  async excluir(clienteId) {
+    if (clienteId == null || Number.isNaN(clienteId)) {
+      throw new Error("ID inválido");
+    }
+    const resultado = await clienteModel.excluir(clienteId);
 
     if (resultado.affectedRows === 0) {
       const erro = new Error("Cliente não encontrado");

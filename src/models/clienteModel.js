@@ -55,26 +55,26 @@ const clienteModel = {
     return clientes;
   },
 
-  async buscarPorId(id) {
+  async buscarPorId(clienteId) {
     const [rows] = await db.query("SELECT * FROM clientes WHERE id = ?", [
-      id,
+      clienteId,
     ]);
 
     return rows[0];
   },
 
-  async atualizar(id, { nome, cpf, telefone, endereco, cidade }) {
+  async atualizar(clienteId, { nome, cpf, telefone, endereco, cidade }) {
     const [resultado] = await db.query(
       "UPDATE clientes SET nome = ?, cpf = ?, telefone = ?, endereco = ?, cidade = ? WHERE  id = ?",
-      [nome, cpf, telefone, endereco, cidade, id],
+      [nome, cpf, telefone, endereco, cidade, clienteId],
     );
 
     return resultado;
   },
 
-  async excluir(id) {
+  async excluir(clienteId) {
     const [resultado] = await db.query("DELETE FROM clientes WHERE id = ?", [
-      id,
+      clienteId,
     ]);
 
     return resultado;

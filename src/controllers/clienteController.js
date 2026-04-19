@@ -46,11 +46,13 @@ const clienteController = {
     try {
       const { id } = req.params;
 
-      if (!id || isNaN(Number(id))) {
+      const clienteId = Number(id);
+
+      if (Number.isNaN(clienteId)) {
         return res.status(400).json({ erro: "ID Inválido" });
       }
 
-      const cliente = await clienteService.buscarPorId(id);
+      const cliente = await clienteService.buscarPorId(clienteId);
       return res.status(200).json(cliente);
     } catch (erro) {
       return tratarErro(res, erro);
@@ -61,11 +63,17 @@ const clienteController = {
     try {
       const { id } = req.params;
 
-      if (!id || isNaN(Number(id))) {
+      const clienteId = Number(id);
+
+      if (Number.isNaN(clienteId)) {
         return res.status(400).json({ erro: "ID Inválido" });
       }
 
-      if (Object.values(req.body).every((campo) => campo == null || String(campo).trim() === "")) {
+      if (
+        Object.values(req.body).every(
+          (campo) => campo == null || String(campo).trim() === "",
+        )
+      ) {
         return res
           .status(400)
           .json({ erro: "É obrigatório atualizar pelo menos um campo" });
@@ -75,7 +83,7 @@ const clienteController = {
 
       const dados = { nome, cpf, telefone, endereco, cidade };
 
-      const cliente = await clienteService.atualizar(id, dados);
+      const cliente = await clienteService.atualizar(clienteId, dados);
 
       return res.status(200).json(cliente);
     } catch (erro) {
@@ -87,11 +95,13 @@ const clienteController = {
     try {
       const { id } = req.params;
 
-      if (!id || isNaN(Number(id))) {
+      const clienteId = Number(id);
+
+      if (Number.isNaN(clienteId)) {
         return res.status(400).json({ erro: "ID Inválido" });
       }
 
-      await clienteService.excluir(id);
+      await clienteService.excluir(clienteId);
 
       return res.status(200).json({ message: "Cliente excluido com sucesso" });
     } catch (erro) {
