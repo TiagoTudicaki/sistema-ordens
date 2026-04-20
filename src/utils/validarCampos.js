@@ -4,12 +4,10 @@ function validarCamposVazios(camposObrigatorios) {
     .map(([campo]) => campo);
 }
 
-function campoNomeSomenteTexto(nome) {
-  return /^[A-Za-zÀ-ÿ\s]+$/.test(nome);
+function validarTextoSimples(valor) {
+  return /^[A-Za-zÀ-ÿ\s]+$/.test(valor);
 }
-function campoCidadeSomenteTexto(cidade) {
-  return /^[A-Za-zÀ-ÿ\s]+$/.test(cidade);
-}
+
 
 function campoEnderecoSomenteTexto(endereco) {
   return (
@@ -27,11 +25,20 @@ function cpfContemCaracterInvalido(cpf) {
   return /[^\d\s.-]/.test(cpf);
 }
 
+function validarIdentificador(identificador){
+  return /^\d{1,4}$/.test(String(identificador).trim());
+}
+
+function validarIdPositivoInt(id){
+  return Number.isInteger(id) && id > 0;
+}
+
 module.exports = {
   validarCamposVazios,
-  campoNomeSomenteTexto,
-  campoCidadeSomenteTexto,
+  validarTextoSimples,
   campoEnderecoSomenteTexto,
   telefoneContemCaracterInvalido,
   cpfContemCaracterInvalido,
+  validarIdPositivoInt,
+  validarIdentificador
 };

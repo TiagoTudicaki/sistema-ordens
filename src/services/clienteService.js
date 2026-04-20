@@ -1,13 +1,12 @@
 const clienteModel = require("../models/clienteModel");
 const {
   validarCamposVazios,
-  campoNomeSomenteTexto,
-  campoCidadeSomenteTexto,
+  validarTextoSimples,
   campoEnderecoSomenteTexto,
   telefoneContemCaracterInvalido,
   cpfContemCaracterInvalido,
+  validarIdPositivoInt,
 } = require("../utils/validarCampos");
-const { camposVazios } = require("../utils/tratarErro");
 const {
   padronizarTexto,
   limparCPF,
@@ -37,12 +36,16 @@ const clienteService = {
     }
 
     // valida formato no bruto
-    if (!campoNomeSomenteTexto(nome)) {
+    if (!validarTextoSimples(nome)) {
       throw new Error("Nome deve conter apenas letras e espaços");
     }
 
-    if (!campoCidadeSomenteTexto(cidade)) {
-      throw new Error("Cidade deve conter apenas letras e espaços");
+    if (cpfContemCaracterInvalido(cpf)) {
+      throw new Error("CPF inválido: cpf deve conter somente números");
+    }
+
+    if (telefoneContemCaracterInvalido(telefone)) {
+      throw new Error("Telefone contém caracteres inválidos");
     }
 
     if (!campoEnderecoSomenteTexto(endereco)) {
@@ -51,12 +54,8 @@ const clienteService = {
       );
     }
 
-    if (telefoneContemCaracterInvalido(telefone)) {
-      throw new Error("Telefone contém caracteres inválidos");
-    }
-
-    if (cpfContemCaracterInvalido(cpf)) {
-      throw new Error("CPF inválido: cpf deve conter somente números");
+    if (!validarTextoSimples(cidade)) {
+      throw new Error("Cidade deve conter apenas letras e espaços");
     }
 
     // sanitiza depois da validação
@@ -90,17 +89,22 @@ const clienteService = {
       throw erro;
     }
   },
+
   async listar(campos) {
     const filtrosValidos = consultaFiltrada(campos);
 
     const { nome, cpf, telefone, endereco, cidade } = filtrosValidos;
 
-    if (nome && !campoNomeSomenteTexto(nome)) {
+    if (nome && !validarTextoSimples(nome)) {
       throw new Error("Nome deve conter apenas letras e espaços");
     }
 
-    if (cidade && !campoCidadeSomenteTexto(cidade)) {
-      throw new Error("Cidade deve conter apenas letras e espaços");
+    if (cpf && cpfContemCaracterInvalido(cpf)) {
+      throw new Error("CPF inválido: cpf deve conter somente números");
+    }
+
+    if (telefone && telefoneContemCaracterInvalido(telefone)) {
+      throw new Error("Telefone contém caracteres inválidos");
     }
 
     if (endereco && !filtraConsultaEndereco(endereco)) {
@@ -109,12 +113,8 @@ const clienteService = {
       );
     }
 
-    if (telefone && telefoneContemCaracterInvalido(telefone)) {
-      throw new Error("Telefone contém caracteres inválidos");
-    }
-
-    if (cpf && cpfContemCaracterInvalido(cpf)) {
-      throw new Error("CPF inválido: cpf deve conter somente números");
+    if (cidade && !validarTextoSimples(cidade)) {
+      throw new Error("Cidade deve conter apenas letras e espaços");
     }
 
     const filtrosNormalizados = {};
@@ -142,7 +142,7 @@ const clienteService = {
   },
 
   async buscarPorId(clienteId) {
-    if (clienteId == null || Number.isNaN(clienteId)) {
+    if (!validarIdPositivoInt(clienteId)) {
       throw new Error("ID inválido");
     }
 
@@ -158,7 +158,7 @@ const clienteService = {
   },
 
   async atualizar(clienteId, dados) {
-    if (clienteId == null || Number.isNaN(clienteId)) {
+    if (!validarIdPositivoInt(clienteId)) {
       throw new Error("ID inválido");
     }
 
@@ -180,12 +180,16 @@ const clienteService = {
 
     const { nome, cpf, telefone, endereco, cidade } = dados;
 
-    if (nome && !campoNomeSomenteTexto(nome)) {
+    if (nome && !validarTextoSimples(nome)) {
       throw new Error("Nome deve conter apenas letras e espaços");
     }
 
-    if (cidade && !campoCidadeSomenteTexto(cidade)) {
-      throw new Error("Cidade deve conter apenas letras e espaços");
+    if (cpf && cpfContemCaracterInvalido(cpf)) {
+      throw new Error("CPF inválido: cpf deve conter somente números");
+    }
+
+    if (telefone && telefoneContemCaracterInvalido(telefone)) {
+      throw new Error("Telefone contém caracteres inválidos");
     }
 
     if (endereco && !filtraConsultaEndereco(endereco)) {
@@ -194,12 +198,8 @@ const clienteService = {
       );
     }
 
-    if (telefone && telefoneContemCaracterInvalido(telefone)) {
-      throw new Error("Telefone contém caracteres inválidos");
-    }
-
-    if (cpf && cpfContemCaracterInvalido(cpf)) {
-      throw new Error("CPF inválido: cpf deve conter somente números");
+    if (cidade && !validarTextoSimples(cidade)) {
+      throw new Error("Cidade deve conter apenas letras e espaços");
     }
 
     const filtrosNormalizados = {};
@@ -237,7 +237,7 @@ const clienteService = {
   },
 
   async excluir(clienteId) {
-    if (clienteId == null || Number.isNaN(clienteId)) {
+    if (!validarIdPositivoInt(clienteId)) {
       throw new Error("ID inválido");
     }
     const resultado = await clienteModel.excluir(clienteId);

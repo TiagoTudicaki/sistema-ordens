@@ -1,6 +1,6 @@
 const equipamentoService = require("../services/equipamentoService");
 const tratarErro = require("../utils/tratarErro");
-const { validarCamposVazios } = require("../utils/validarCampos");
+const { validarCamposVazios, validarIdPositivoInt } = require("../utils/validarCampos");
 
 const equipamentoController = {
   async criar(req, res) {
@@ -17,7 +17,9 @@ const equipamentoController = {
         tipo_gas,
       } = req.body;
 
-      if (!cliente_id || isNaN(Number(cliente_id))) {
+      const clienteIdNumero = Number(cliente_id);
+
+      if (!validarIdPositivoInt(clienteIdNumero)) {
         return res.status(400).json({ erro: "cliente_id é inválido" });
       }
 
@@ -25,16 +27,16 @@ const equipamentoController = {
         local,
         identificador,
       };
-      const temCamposVazios = validarCamposVazios(camposObrigatorios);
+      const camposVazios = validarCamposVazios(camposObrigatorios);
 
-      if (temCamposVazios) {
+      if (camposVazios.length > 0) {
         return res.status(400).json({
           erro: "Campos obrigatórios não preenchidos",
         });
       }
 
       const dados = {
-        cliente_id,
+        cliente_id : clienteIdNumero,
         tipo,
         local,
         identificador,

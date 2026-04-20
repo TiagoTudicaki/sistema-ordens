@@ -1,10 +1,45 @@
 const equipamentoModel = require("../models/equipamentoModel");
+const{validarIdPositivoInt, validarIdentificador, validarCamposVazios} = require("../utils/validarCampos");
 
 const equipamentoService = {
   async criar(dados) {
-    const { identificador } = dados;
+    const { 
+        cliente_id,
+        tipo,
+        local,
+        identificador,
+        marca,
+        modelo,
+        serie,
+        capacidade_btu,
+        tipo_gas, 
+      } 
+      = dados;
 
-    if (!identificador?.trim() || !/^\d{1,4}$/.test(identificador?.trim())) {
+      const vazios = validarCamposVazios({
+        cliente_id,
+        tipo,
+        local,
+        identificador,
+        marca,
+        modelo,
+        serie,
+        capacidade_btu,
+        tipo_gas,});
+
+      if(vazios.length > 0){
+        throw new Error(`Campos vazios: ${vazios.join(", ")}`);
+      }  
+
+    if(!validarIdPositivoInt(cliente_id)){
+      throw new Error("ID inválido");
+    }
+
+    if(local == null ){
+      throw new Errror("O campo local é obrigatório");
+    }
+
+    if (!validarIdentificador(identificador)) {
       const erro = new Error(
         "Identificador deve ser número de 1 a 4 dígitos (1, 15, 123)",
       );

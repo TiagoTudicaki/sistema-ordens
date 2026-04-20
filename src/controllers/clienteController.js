@@ -1,5 +1,6 @@
 const clienteService = require("../services/clienteService");
 const { tratarErro } = require("../utils/tratarErro");
+const { validarIdPositivoInt } = require("../utils/validarCampos");
 
 const clienteController = {
   async criar(req, res) {
@@ -48,7 +49,7 @@ const clienteController = {
 
       const clienteId = Number(id);
 
-      if (Number.isNaN(clienteId)) {
+      if (!validarIdPositivoInt(clienteId)) {
         return res.status(400).json({ erro: "ID Inválido" });
       }
 
@@ -65,7 +66,7 @@ const clienteController = {
 
       const clienteId = Number(id);
 
-      if (Number.isNaN(clienteId)) {
+      if (!validarIdPositivoInt(clienteId)) {
         return res.status(400).json({ erro: "ID Inválido" });
       }
 
@@ -97,7 +98,7 @@ const clienteController = {
 
       const clienteId = Number(id);
 
-      if (Number.isNaN(clienteId)) {
+      if (!validarIdPositivoInt(clienteId)) {
         return res.status(400).json({ erro: "ID Inválido" });
       }
 
