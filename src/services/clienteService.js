@@ -2,16 +2,17 @@ const clienteModel = require("../models/clienteModel");
 const {
   validarCamposVazios,
   validarTextoSimples,
-  campoEnderecoSomenteTexto,
-  telefoneContemCaracterInvalido,
+  validarEndereco,
   cpfContemCaracterInvalido,
   validarIdPositivoInt,
 } = require("../utils/validarCampos");
 const {
   padronizarTexto,
+  sanitizarTexto,
   limparCPF,
-  padronizarEndereco,
   limparTelefone,
+  padronizarEndereco,
+  padronizarCidade,
 } = require("../utils/padronizarDados");
 const {
   consultaFiltrada,
@@ -20,72 +21,121 @@ const {
 
 const clienteService = {
   async criar(dados) {
+    /**
+     * Cria um cliente garantindo:
+     * - validação de tipo dos dados de entrada
+     * - sanitização (remoção de espaços e caracteres desnecessários)
+     * - padronização (formatação consistente dos dados)
+     * - validação das regras de negócio
+     * - tratamento de erro para CPF duplicado no banco
+     */
+
+    if (!dados || typeof dados !== "object") {
+      throw new Error("Requisição inválida");
+    }
+
     const { nome, cpf, telefone, endereco, cidade } = dados;
 
-    // valida obrigatórios
-    const vazios = validarCamposVazios({
-      nome,
-      cpf,
-      telefone,
-      endereco,
-      cidade,
-    });
-
-    if (vazios.length > 0) {
-      throw new Error(`Campos vazios: ${vazios.join(", ")}`);
+    // --- NOME ---
+    if (typeof nome !== "string") {
+      throw new Error("Nome deve ser texto");
     }
 
-    // valida formato no bruto
-    if (!validarTextoSimples(nome)) {
-      throw new Error("Nome deve conter apenas letras e espaços");
+    const nomeLimpo = sanitizarTexto(nome);
+
+    if (nomeLimpo === "") {
+      throw new Error("Nome não pode ser vazio");
     }
 
-    if (cpfContemCaracterInvalido(cpf)) {
-      throw new Error("CPF inválido: cpf deve conter somente números");
+    const nomePadronizado = padronizarTexto(nomeLimpo);
+
+    const nomeValido = validarTextoSimples(nomePadronizado);
+
+    if (!nomeValido) {
+      throw new Error("Nome deve possuir apenas letras e espaços");
     }
 
-    if (telefoneContemCaracterInvalido(telefone)) {
-      throw new Error("Telefone contém caracteres inválidos");
+    // --- CPF ---
+    if (typeof cpf !== "string" && typeof cpf !== "number") {
+      throw new Error("CPF inválido");
     }
 
-    if (!campoEnderecoSomenteTexto(endereco)) {
-      throw new Error(
-        "Endereço inválido: mínimo 5 caracteres, apenas letras, números, espaços, vírgula, ponto e hífen",
-      );
+    // Remove tudo que não for número
+    const cpfLimpo = limparCPF(cpf);
+
+    if (cpfLimpo.length !== 11) {
+      throw new Error("CPF inválido");
     }
 
-    if (!validarTextoSimples(cidade)) {
-      throw new Error("Cidade deve conter apenas letras e espaços");
+    // --- TELEFONE ---
+    if (typeof telefone !== "string" && typeof telefone !== "number") {
+      throw new Error("Telefone inválido");
     }
 
-    // sanitiza depois da validação
-    if (limparCPF(cpf).length !== 11) {
-      throw new Error("CPF deve conter 11 dígitos");
-    }
+    // Remove caracteres como (), espaço e hífen
+    const telefoneLimpo = limparTelefone(telefone);
 
-    if (
-      limparTelefone(telefone).length < 10 ||
-      limparTelefone(telefone).length > 11
-    ) {
+    if (telefoneLimpo.length !== 10 && telefoneLimpo.length !== 11) {
       throw new Error("Telefone deve conter 10 ou 11 dígitos");
     }
 
-    const campos = {
-      nome: padronizarTexto(nome),
-      cpf: limparCPF(cpf),
-      telefone: limparTelefone(telefone),
-      endereco: padronizarEndereco(endereco),
-      cidade: padronizarTexto(cidade),
+    // --- ENDEREÇO ---
+    if (typeof endereco !== "string") {
+      throw new Error("Endereço inválido");
+    }
+
+    const enderecoLimpo = sanitizarTexto(endereco);
+
+    if (enderecoLimpo === "") {
+      throw new Error("Endereço não pode ser vazio");
+    }
+
+    const enderecoPadronizado = padronizarEndereco(enderecoLimpo);
+
+    const enderecoValido = validarEndereco(enderecoPadronizado);
+
+    if (!enderecoValido) {
+      throw new Error("Endereço inválido");
+    }
+
+    // --- CIDADE ---
+    if (typeof cidade !== "string") {
+      throw new Error("Cidade inválida");
+    }
+
+    const cidadeLimpo = sanitizarTexto(cidade);
+
+    if (cidadeLimpo === "") {
+      throw new Error("Cidade não pode ser vazia");
+    }
+
+    const cidadePadronizada = padronizarCidade(cidadeLimpo);
+
+    const cidadeValida = validarTextoSimples(cidadePadronizada);
+
+    if (!cidadeValida) {
+      throw new Error("Cidade deve possuir apenas letras e espaços");
+    }
+
+    // Objeto final já limpo, padronizado e validado
+    const cliente = {
+      nome: nomePadronizado,
+      cpf: cpfLimpo,
+      telefone: telefoneLimpo,
+      endereco: enderecoPadronizado,
+      cidade: cidadePadronizada,
     };
 
-    // persistência
     try {
-      return await clienteModel.criar(campos);
+      return await clienteModel.criar(cliente);
     } catch (erro) {
+      // Trata erro de chave única (CPF duplicado)
       if (erro.code === "ER_DUP_ENTRY") {
-        erro.message = "CPF já cadastrado";
-        erro.status = 409;
+        const erroCustom = new Error("CPF já cadastrado");
+        erroCustom.status = 409;
+        throw erroCustom;
       }
+
       throw erro;
     }
   },

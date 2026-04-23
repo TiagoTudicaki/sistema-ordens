@@ -1,7 +1,8 @@
 const db = require("../config/database");
 
 const clienteModel = {
-  async criar({ nome, cpf, telefone, endereco, cidade }) {
+  async criar(cliente) {
+    const { nome, cpf, telefone, endereco, cidade } = cliente;
     const [resultado] = await db.query(
       "INSERT INTO clientes(nome, cpf, telefone, endereco,cidade)VALUES(?, ?, ?, ?, ?)",
       [nome, cpf, telefone, endereco, cidade],

@@ -1,26 +1,41 @@
 function padronizarTexto(texto) {
-  if (texto == null) return texto;
-
-  const textoString = String(texto);
-
-  return textoString
-    .trim()
+ 
+  return texto
     .toLowerCase()
     .split(/\s+/)
     .map((palavra) => palavra.charAt(0).toUpperCase() + palavra.slice(1))
     .join(" ");
 }
 
-function limparCPF(cpf) {
-  if (cpf == null) return cpf;
+function sanitizarTexto(texto){
+  return texto.trim();
+}
 
+function limparCPF(cpf) {
   return String(cpf).replace(/\D/g, "");
 }
 
-function padronizarEndereco(endereco) {
-  if (endereco == null) return endereco;
+function limparTelefone(telefone) {
+  return String(telefone).replace(/\D/g, "");
+}
 
-  return String(endereco).normalize("NFC").trim().replace(/\s+/g, " ");
+function padronizarEndereco(endereco) {
+  return String(endereco).normalize("NFC").replace(/\s+/g, " ");
+}
+
+function padronizarCidade(cidade) {
+  const preposicoes = ["de", "da", "do", "dos", "das"];
+
+  return cidade
+    .toLowerCase()
+    .split(/\s+/)
+    .map((palavra, index) => {
+      if (index !== 0 && preposicoes.includes(palavra)) {
+        return palavra;
+      }
+      return palavra.charAt(0).toUpperCase() + palavra.slice(1);
+    })
+    .join(" ");
 }
 
 function normalizarEmail(email) {
@@ -28,15 +43,22 @@ function normalizarEmail(email) {
   return email.toLowerCase().trim();
 }
 
-function limparTelefone(telefone) {
-  if (telefone == null) return telefone;
-  return String(telefone).replace(/\D/g, "");
+
+
+function padronizarParaValorNull(valor) {
+  return valor.trim();
 }
+
+
 
 module.exports = {
   padronizarTexto,
+  sanitizarTexto,
   limparCPF,
-  padronizarEndereco,
-  normalizarEmail,
   limparTelefone,
+  padronizarEndereco,
+  padronizarCidade,
+  normalizarEmail,
+  padronizarParaValorNull
+ 
 };

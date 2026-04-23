@@ -8,37 +8,27 @@ function validarTextoSimples(valor) {
   return /^[A-Za-zÀ-ÿ\s]+$/.test(valor);
 }
 
-
-function campoEnderecoSomenteTexto(endereco) {
-  return (
-    typeof endereco === "string" &&
-    endereco.trim().length >= 5 &&
-    /^[A-Za-zÀ-ÿ0-9\s,.-]+$/.test(endereco)
-  );
-}
-
-function telefoneContemCaracterInvalido(telefone) {
-  return /[^\d\s()-]/.test(telefone);
+function validarEndereco(endereco) {
+  return endereco.length >= 5 && /^[A-Za-zÀ-ÿ0-9\s,.-]+$/.test(endereco);
 }
 
 function cpfContemCaracterInvalido(cpf) {
   return /[^\d\s.-]/.test(cpf);
 }
 
-function validarIdentificador(identificador){
+function validarIdentificador(identificador) {
   return /^\d{1,4}$/.test(String(identificador).trim());
 }
 
-function validarIdPositivoInt(id){
+function validarIdPositivoInt(id) {
   return Number.isInteger(id) && id > 0;
 }
 
 module.exports = {
   validarCamposVazios,
   validarTextoSimples,
-  campoEnderecoSomenteTexto,
-  telefoneContemCaracterInvalido,
+  validarEndereco,
   cpfContemCaracterInvalido,
   validarIdPositivoInt,
-  validarIdentificador
+  validarIdentificador,
 };

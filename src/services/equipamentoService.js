@@ -1,5 +1,5 @@
 const equipamentoModel = require("../models/equipamentoModel");
-const{validarIdPositivoInt, validarIdentificador, validarCamposVazios} = require("../utils/validarCampos");
+const{validarIdPositivoInt, validarIdentificador, validarCamposVazios, validarTextoSimples} = require("../utils/validarCampos");
 
 const equipamentoService = {
   async criar(dados) {
@@ -18,14 +18,8 @@ const equipamentoService = {
 
       const vazios = validarCamposVazios({
         cliente_id,
-        tipo,
         local,
-        identificador,
-        marca,
-        modelo,
-        serie,
-        capacidade_btu,
-        tipo_gas,});
+        identificador,});
 
       if(vazios.length > 0){
         throw new Error(`Campos vazios: ${vazios.join(", ")}`);
@@ -35,9 +29,11 @@ const equipamentoService = {
       throw new Error("ID inválido");
     }
 
-    if(local == null ){
-      throw new Errror("O campo local é obrigatório");
+    if(!validarTextoSimples(tipo)){
+      
     }
+
+
 
     if (!validarIdentificador(identificador)) {
       const erro = new Error(
