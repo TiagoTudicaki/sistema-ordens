@@ -1,54 +1,37 @@
 const equipamentoService = require("../services/equipamentoService");
 const tratarErro = require("../utils/tratarErro");
-const { validarCamposVazios, validarIdPositivoInt } = require("../utils/validarCampos");
+const {validarIdPositivoInt } = require("../utils/validarCampos");
 
 const equipamentoController = {
   async criar(req, res) {
+    
     try {
-      const {
-        cliente_id,
-        tipo,
-        local,
-        identificador,
-        marca,
-        modelo,
-        serie,
-        capacidade_btu,
-        tipo_gas,
-      } = req.body;
+      const dados = req.body;
 
-      const clienteIdNumero = Number(cliente_id);
+      if(!dados || Object.keys(dados).length === 0){
+       return res.status(400).json({erro:"Requisição inválida"});
+      }
+
+      const clienteIdNumero = Number(dados.cliente_id);
 
       if (!validarIdPositivoInt(clienteIdNumero)) {
         return res.status(400).json({ erro: "cliente_id é inválido" });
       }
 
-      const camposObrigatorios = {
-        local,
-        identificador,
-      };
-      const camposVazios = validarCamposVazios(camposObrigatorios);
+      const equipamento = {
+        cliente_id: clienteIdNumero,
+        tipo: dados.tipo,
+        local: dados.local,
+        identificador: dados.identificador,
+        marca: dados.marca,
+        modelo: dados.modelo,
+        serie: dados.serie,
+        capacidade_btu: dados.capacidade_btu,
+        tipo_gas: dados.tipo_gas,
+      } 
 
-      if (camposVazios.length > 0) {
-        return res.status(400).json({
-          erro: "Campos obrigatórios não preenchidos",
-        });
-      }
-
-      const dados = {
-        cliente_id : clienteIdNumero,
-        tipo,
-        local,
-        identificador,
-        marca,
-        modelo,
-        serie,
-        capacidade_btu,
-        tipo_gas,
-      };
-
-      const equipamento = await equipamentoService.criar(dados);
-      res.status(201).json(equipamento);
+      const novoEquipamento = await equipamentoService.criar(equipamento);
+      res.status(201).json(novoEquipamento);
     } catch (erro) {
       return tratarErro(res, erro);
     }

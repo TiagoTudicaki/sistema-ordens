@@ -3,6 +3,8 @@ const{validarIdPositivoInt, validarIdentificador, validarCamposVazios, validarTe
 
 const equipamentoService = {
   async criar(dados) {
+
+    
     const { 
         cliente_id,
         tipo,
