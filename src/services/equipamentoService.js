@@ -1,10 +1,13 @@
 const equipamentoModel = require("../models/equipamentoModel");
 const{validarIdPositivoInt, validarIdentificador, validarCamposVazios, validarTextoSimples} = require("../utils/validarCampos");
+const {sanitizarTextoOpcionais} = require("../utils/padronizarDados");
 
 const equipamentoService = {
   async criar(dados) {
 
-    
+    if(!dados || typeof dados !== "object"){
+      throw new Error("Requisição inválida");
+    }
     const { 
         cliente_id,
         tipo,
@@ -18,18 +21,22 @@ const equipamentoService = {
       } 
       = dados;
 
-      const vazios = validarCamposVazios({
-        cliente_id,
-        local,
-        identificador,});
+      const clienteIdNumero = Number(cliente_id);
 
-      if(vazios.length > 0){
-        throw new Error(`Campos vazios: ${vazios.join(", ")}`);
-      }  
+      if(Number.isNaN(clienteIdNumero)){
+        throw new Error("ID deve ser numero");
+      }
 
-    if(!validarIdPositivoInt(cliente_id)){
+
+    if(!validarIdPositivoInt(clienteIdNumero)){
       throw new Error("ID inválido");
     }
+
+    if(tipo !== undefined && tipo !== null && typeof tipo !== "string"){
+      throw new Error("tipo inválido");
+    }
+
+    const tipoLimpo = sanitizarTextoOpcionais(tipo);
 
     if(!validarTextoSimples(tipo)){
       

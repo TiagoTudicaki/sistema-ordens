@@ -7,8 +7,12 @@ function padronizarTexto(texto) {
     .join(" ");
 }
 
-function sanitizarTexto(texto){
+function sanitizarTextoObrigatorios(texto){
   return texto.trim();
+}
+
+function sanitizarTextoOpcionais(texto){
+  return texto?.trim() || null;
 }
 
 function limparCPF(cpf) {
@@ -45,20 +49,17 @@ function normalizarEmail(email) {
 
 
 
-function padronizarParaValorNull(valor) {
-  return valor.trim();
-}
 
 
 
 module.exports = {
   padronizarTexto,
-  sanitizarTexto,
+  sanitizarTextoObrigatorios,
+  sanitizarTextoOpcionais,
   limparCPF,
   limparTelefone,
   padronizarEndereco,
   padronizarCidade,
   normalizarEmail,
-  padronizarParaValorNull
  
 };

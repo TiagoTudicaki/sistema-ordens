@@ -8,7 +8,7 @@ const {
 } = require("../utils/validarCampos");
 const {
   padronizarTexto,
-  sanitizarTexto,
+  sanitizarTextoObrigatorios,
   limparCPF,
   limparTelefone,
   padronizarEndereco,
@@ -41,7 +41,7 @@ const clienteService = {
       throw new Error("Nome deve ser texto");
     }
 
-    const nomeLimpo = sanitizarTexto(nome);
+    const nomeLimpo = sanitizarTextoObrigatorios(nome);
 
     if (nomeLimpo === "") {
       throw new Error("Nome não pode ser vazio");
@@ -84,7 +84,7 @@ const clienteService = {
       throw new Error("Endereço inválido");
     }
 
-    const enderecoLimpo = sanitizarTexto(endereco);
+    const enderecoLimpo = sanitizarTextoObrigatorios(endereco);
 
     if (enderecoLimpo === "") {
       throw new Error("Endereço não pode ser vazio");
@@ -103,7 +103,7 @@ const clienteService = {
       throw new Error("Cidade inválida");
     }
 
-    const cidadeLimpo = sanitizarTexto(cidade);
+    const cidadeLimpo = sanitizarTextoObrigatorios(cidade);
 
     if (cidadeLimpo === "") {
       throw new Error("Cidade não pode ser vazia");

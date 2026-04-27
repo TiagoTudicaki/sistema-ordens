@@ -15,12 +15,14 @@ Cada tipo de serviço possui uma abordagem específica, com campos adaptados par
 🚧 Em desenvolvimento ativo — com foco em consolidação de boas práticas de back-end.
 
 ### Situação atual
+
 - Estrutura MVC definida (controller, service, model)
 - CRUD completo implementado
 - Validação, verificação e sanitização já aplicadas na entidade **clientes**
 - Regras de negócio principais já modeladas
 
 ### Próximos passos
+
 - Aplicar o padrão de validação, verificação e sanitização nas demais entidades
 - Implementar testes unitários (Jest)
 - Documentação com Swagger
@@ -67,6 +69,7 @@ Cada tipo de serviço possui uma abordagem específica, com campos adaptados par
   Regras:
   - Transições de status são validadas no back-end
   - Não é permitido alterar ordens finalizadas ou canceladas
+
 - Cálculo de custo total baseado nos materiais informados
 - Suporte a múltiplos tipos de serviço com estrutura flexível (JSON)
 
@@ -203,22 +206,26 @@ sistema-ordens/
 ### Passo a passo
 
 **1. Clone o repositório**
+
 ```bash
 git clone https://github.com/TiagoTudicaki/sistema-ordens.git
 cd sistema-ordens
 ```
 
 **2. Instale as dependências**
+
 ```bash
 npm install
 ```
 
 **3. Configure as variáveis de ambiente**
+
 ```bash
 cp .env.example .env
 ```
 
 Edite o arquivo `.env` com suas credenciais:
+
 ```env
 DB_HOST=localhost
 DB_USER=root
@@ -258,7 +265,7 @@ CREATE TABLE tecnicos (
 CREATE TABLE equipamentos (
   id INT NOT NULL AUTO_INCREMENT,
   cliente_id INT NOT NULL,
-  tipo VARCHAR(50) NULL,
+  tipo ENUM('acj','hi-wall','piso-teto','multi-split','cassete','self-contained','built-in','vrf','fan-coil','roof-top') DEFAULT NULL,
   local VARCHAR(50) NOT NULL,
   identificador VARCHAR(4) NOT NULL,
   marca VARCHAR(50) DEFAULT NULL,
@@ -307,6 +314,7 @@ CREATE TABLE `ordens` (
 ```
 
 **5. Inicie o servidor**
+
 ```bash
 npm run dev
 ```
@@ -319,15 +327,16 @@ A aplicação estará disponível em `http://localhost:3000`.
 
 ### Clientes
 
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| POST | `/api/clientes` | Cadastrar cliente |
-| GET | `/api/clientes` | Listar todos os clientes |
-| GET | `/api/clientes/:id` | Buscar cliente por ID |
-| PUT | `/api/clientes/:id` | Atualizar cliente |
-| DELETE | `/api/clientes/:id` | Excluir cliente |
+| Método | Rota                | Descrição                |
+| ------ | ------------------- | ------------------------ |
+| POST   | `/api/clientes`     | Cadastrar cliente        |
+| GET    | `/api/clientes`     | Listar todos os clientes |
+| GET    | `/api/clientes/:id` | Buscar cliente por ID    |
+| PUT    | `/api/clientes/:id` | Atualizar cliente        |
+| DELETE | `/api/clientes/:id` | Excluir cliente          |
 
 **Exemplo de body (POST/PUT):**
+
 ```json
 {
   "nome": "João Silva",
@@ -342,15 +351,16 @@ A aplicação estará disponível em `http://localhost:3000`.
 
 ### Técnicos
 
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| POST | `/api/tecnicos` | Cadastrar técnico |
-| GET | `/api/tecnicos` | Listar todos os técnicos |
-| GET | `/api/tecnicos/:id` | Buscar técnico por ID |
-| PUT | `/api/tecnicos/:id` | Atualizar técnico |
-| DELETE | `/api/tecnicos/:id` | Excluir técnico |
+| Método | Rota                | Descrição                |
+| ------ | ------------------- | ------------------------ |
+| POST   | `/api/tecnicos`     | Cadastrar técnico        |
+| GET    | `/api/tecnicos`     | Listar todos os técnicos |
+| GET    | `/api/tecnicos/:id` | Buscar técnico por ID    |
+| PUT    | `/api/tecnicos/:id` | Atualizar técnico        |
+| DELETE | `/api/tecnicos/:id` | Excluir técnico          |
 
 **Exemplo de body (POST/PUT):**
+
 ```json
 {
   "nome": "Carlos Souza",
@@ -364,15 +374,16 @@ A aplicação estará disponível em `http://localhost:3000`.
 
 ### Equipamentos
 
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| POST | `/api/equipamentos` | Cadastrar equipamento |
-| GET | `/api/equipamentos` | Listar todos os equipamentos |
-| GET | `/api/equipamentos/:id` | Buscar equipamento por ID |
-| PUT | `/api/equipamentos/:id` | Atualizar equipamento |
-| DELETE | `/api/equipamentos/:id` | Excluir equipamento |
+| Método | Rota                    | Descrição                    |
+| ------ | ----------------------- | ---------------------------- |
+| POST   | `/api/equipamentos`     | Cadastrar equipamento        |
+| GET    | `/api/equipamentos`     | Listar todos os equipamentos |
+| GET    | `/api/equipamentos/:id` | Buscar equipamento por ID    |
+| PUT    | `/api/equipamentos/:id` | Atualizar equipamento        |
+| DELETE | `/api/equipamentos/:id` | Excluir equipamento          |
 
 **Exemplo de body (POST/PUT):**
+
 ```json
 {
   "cliente_id": 1,
@@ -391,20 +402,21 @@ A aplicação estará disponível em `http://localhost:3000`.
 
 ### Preços
 
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| POST | `/api/precos` | Cadastrar preço |
-| GET | `/api/precos` | Listar todos os preços |
-| GET | `/api/precos/:id` | Buscar preço por ID |
-| PUT | `/api/precos/:id` | Atualizar preço |
-| DELETE | `/api/precos/:id` | Excluir preço |
+| Método | Rota              | Descrição              |
+| ------ | ----------------- | ---------------------- |
+| POST   | `/api/precos`     | Cadastrar preço        |
+| GET    | `/api/precos`     | Listar todos os preços |
+| GET    | `/api/precos/:id` | Buscar preço por ID    |
+| PUT    | `/api/precos/:id` | Atualizar preço        |
+| DELETE | `/api/precos/:id` | Excluir preço          |
 
 **Exemplo de body (POST/PUT):**
+
 ```json
 {
   "codigo": "MO001",
   "descricao": "Mão de obra - Manutenção preventiva",
-  "preco_uni": 150.00,
+  "preco_uni": 150.0,
   "unidade": "hora"
 }
 ```
@@ -413,15 +425,16 @@ A aplicação estará disponível em `http://localhost:3000`.
 
 ### Ordens de Serviço
 
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| POST | `/api/ordens` | Abrir ordem de serviço |
-| GET | `/api/ordens` | Listar todas as ordens |
-| GET | `/api/ordens/:id` | Buscar ordem por ID |
-| PUT | `/api/ordens/:id` | Atualizar ordem |
-| DELETE | `/api/ordens/:id` | Excluir ordem |
+| Método | Rota              | Descrição              |
+| ------ | ----------------- | ---------------------- |
+| POST   | `/api/ordens`     | Abrir ordem de serviço |
+| GET    | `/api/ordens`     | Listar todas as ordens |
+| GET    | `/api/ordens/:id` | Buscar ordem por ID    |
+| PUT    | `/api/ordens/:id` | Atualizar ordem        |
+| DELETE | `/api/ordens/:id` | Excluir ordem          |
 
 **Exemplo de body (POST):**
+
 ```json
 {
   "cliente_id": 1,
