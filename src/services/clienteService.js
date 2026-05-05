@@ -43,17 +43,15 @@ const clienteService = {
 
     const nomeLimpo = sanitizarTextoObrigatorios(nome);
 
-    if (nomeLimpo === "") {
+    if (!nomeLimpo) {
       throw new Error("Nome não pode ser vazio");
     }
 
-    const nomePadronizado = padronizarTexto(nomeLimpo);
-
-    const nomeValido = validarTextoSimples(nomePadronizado);
-
-    if (!nomeValido) {
+    if (!validarTextoSimples(nomeLimpo)) {
       throw new Error("Nome deve possuir apenas letras e espaços");
     }
+
+    const nomePadronizado = padronizarTexto(nomeLimpo);
 
     // --- CPF ---
     if (typeof cpf !== "string" && typeof cpf !== "number") {

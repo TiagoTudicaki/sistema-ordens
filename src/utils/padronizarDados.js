@@ -1,17 +1,29 @@
 function padronizarTexto(texto) {
+const preposicoes = ["da", "de", "do", "das", "dos"];
  
   return texto
     .toLowerCase()
+    .replace(/\s+/g, " ")
+    .replace(/\s*'\s*/g, "'")
     .split(/\s+/)
-    .map((palavra) => palavra.charAt(0).toUpperCase() + palavra.slice(1))
+    .map((palavra,index) =>{
+      if(index !== 0 && preposicoes.includes(palavra)){
+        return palavra;
+      }
+       return palavra
+      .split("'")
+       .map(parte => parte.charAt(0).toUpperCase() + parte.slice(1))
+       .join("'");
+      })
+    
     .join(" ");
+  } 
+
+function sanitizarTextoObrigatorios(texto) {
+  return texto.trim().replace(/\s+/g, " ");
 }
 
-function sanitizarTextoObrigatorios(texto){
-  return texto.trim();
-}
-
-function sanitizarTextoOpcionais(texto){
+function sanitizarTextoOpcionais(texto) {
   return texto?.trim() || null;
 }
 
@@ -47,10 +59,34 @@ function normalizarEmail(email) {
   return email.toLowerCase().trim();
 }
 
+function padronizarTipoAr(texto) {
+  if (texto == null) return null;
+  return texto.toLowerCase().replace(/\s+/g, "-");
+}
 
+function padronizarCamposOpcionais(texto) {
+  if (texto == null) return null;
+  return texto.toLowerCase();
+}
 
+function padronizarLetrasNumeros(texto) {
+  if (texto == null) return null;
+  return texto.replace(/\s+/g, "").toLowerCase();
+}
 
+function padronizarBtus(texto) {
+  if (texto == null) return null;
 
+  const textoMinusculo = texto.toLowerCase();
+
+  const matchK = textoMinusculo.match(/(\d+)\s*k/);
+
+  if (matchK) {
+    return String(Number(matchK[1]) * 1000);
+  }
+
+  return textoMinusculo.replace(/[^\d]/g, "");
+}
 
 module.exports = {
   padronizarTexto,
@@ -61,5 +97,7 @@ module.exports = {
   padronizarEndereco,
   padronizarCidade,
   normalizarEmail,
- 
+  padronizarTipoAr,
+  padronizarCamposOpcionais,
+  padronizarLetrasNumeros,
 };

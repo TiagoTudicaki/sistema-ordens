@@ -5,7 +5,7 @@ function validarCamposVazios(camposObrigatorios) {
 }
 
 function validarTextoSimples(valor) {
-  return /^[A-Za-zÀ-ÿ\s]+$/.test(valor);
+  return /^[A-Za-zÀ-ÿ\s']+$/.test(valor);
 }
 
 function validarEndereco(endereco) {
@@ -24,6 +24,37 @@ function validarIdPositivoInt(id) {
   return Number.isInteger(id) && id > 0;
 }
 
+const tiposValidos = [
+    "acj",
+    "hi-wall",
+    "piso-teto",
+    "multi-split",
+    "cassete",
+    "self-contained",
+    "built-in",
+    "vrf",
+    "fan-coil",
+    "roof-top",
+  ];
+
+
+function validarTipoDeAr(texto) {
+  
+  if (texto == null) return true;  
+  return tiposValidos.includes(texto);
+  
+}
+
+function validarTextoSimplesOpcional(valor) {
+  if(valor == null) return true;
+  return /^[A-Za-zÀ-ÿ\s']+$/.test(valor);
+}
+
+
+
+
+
+
 module.exports = {
   validarCamposVazios,
   validarTextoSimples,
@@ -31,4 +62,6 @@ module.exports = {
   cpfContemCaracterInvalido,
   validarIdPositivoInt,
   validarIdentificador,
+  validarTipoDeAr,
+  validarTextoSimplesOpcional
 };
