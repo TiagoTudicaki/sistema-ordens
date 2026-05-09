@@ -9,7 +9,7 @@ const {
 const {
   padronizarTexto,
   sanitizarTextoObrigatorios,
-  limparCPF,
+  padronizarCPF,
   limparTelefone,
   padronizarEndereco,
   padronizarCidade,
@@ -55,14 +55,23 @@ const clienteService = {
 
     // --- CPF ---
     if (typeof cpf !== "string" && typeof cpf !== "number") {
-      throw new Error("CPF inválido");
+      throw new Error("Erro: CPF só pode ser do tipo texto ou numero");
     }
 
-    // Remove tudo que não for número
-    const cpfLimpo = limparCPF(cpf);
+    const cpfTexto = String(cpf).trim();
+
+    if (!cpfTexto) {
+      throw new Error("Cpf não pode ser vazio");
+    }
+
+    if (cpfContemCaracterInvalido(cpfTexto)) {
+      throw new Error("CPF não deve conter letras ou caracteres especiais");
+    }
+
+    const cpfLimpo = padronizarCPF(cpfTexto);
 
     if (cpfLimpo.length !== 11) {
-      throw new Error("CPF inválido");
+      throw new Error("CPF deve conter 11 digistos");
     }
 
     // --- TELEFONE ---

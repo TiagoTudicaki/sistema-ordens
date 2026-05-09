@@ -27,8 +27,8 @@ function sanitizarTextoOpcionais(texto) {
   return texto?.trim() || null;
 }
 
-function limparCPF(cpf) {
-  return String(cpf).replace(/\D/g, "");
+function padronizarCPF(cpf) {
+  return cpf.replace(/\D/g, "");
 }
 
 function limparTelefone(telefone) {
@@ -92,7 +92,7 @@ module.exports = {
   padronizarTexto,
   sanitizarTextoObrigatorios,
   sanitizarTextoOpcionais,
-  limparCPF,
+  padronizarCPF,
   limparTelefone,
   padronizarEndereco,
   padronizarCidade,

@@ -17,10 +17,6 @@ function cpfContemCaracterInvalido(cpf) {
 }
 
 
-function contemCaracteresNaoNumericos(cpfTexto){
-        return (/[^0-9.\-]/).test(cpfTexto);
-   }
-
 function validarIdentificador(identificador) {
   return /^\d{1,4}$/.test(String(identificador).trim());
 }
@@ -65,7 +61,6 @@ module.exports = {
   validarTextoSimples,
   validarEndereco,
   cpfContemCaracterInvalido,
-  contemCaracteresNaoNumericos,
   validarIdPositivoInt,
   validarIdentificador,
   validarTipoDeAr,
