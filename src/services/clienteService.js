@@ -10,7 +10,7 @@ const {
   padronizarTexto,
   sanitizarTextoObrigatorios,
   padronizarCPF,
-  limparTelefone,
+  padronizarTelefone,
   padronizarEndereco,
   padronizarCidade,
 } = require("../utils/padronizarDados");
@@ -41,17 +41,21 @@ const clienteService = {
       throw new Error("Nome deve ser texto");
     }
 
-    const nomeLimpo = sanitizarTextoObrigatorios(nome);
+    const nomeProcessado = nome.trim();
 
-    if (!nomeLimpo) {
+    if (!nomeProcessado) {
       throw new Error("Nome não pode ser vazio");
     }
 
-    if (!validarTextoSimples(nomeLimpo)) {
-      throw new Error("Nome deve possuir apenas letras e espaços");
-    }
+    const nomeLimpo = nomeProcessado.replace(/\s+/g, " ");
 
     const nomePadronizado = padronizarTexto(nomeLimpo);
+
+    const nomeValido = /^[A-Za-zÀ-ÿ\s']+$/.test(nomePadronizado);
+
+    if (!nomeValido) {
+      throw new Error("Nome deve possuir apenas letras e espaços");
+    }
 
     // --- CPF ---
     if (typeof cpf !== "string" && typeof cpf !== "number") {
@@ -64,11 +68,13 @@ const clienteService = {
       throw new Error("Cpf não pode ser vazio");
     }
 
-    if (cpfContemCaracterInvalido(cpfTexto)) {
+    contemCaracterInvalido = /[^\d\s.-]/.test(cpfTexto);
+
+    if (contemCaracterInvalido) {
       throw new Error("CPF não deve conter letras ou caracteres especiais");
     }
 
-    const cpfLimpo = padronizarCPF(cpfTexto);
+    const cpfLimpo = cpfTexto.replace(/\D/g, "");
 
     if (cpfLimpo.length !== 11) {
       throw new Error("CPF deve conter 11 digistos");
@@ -76,11 +82,22 @@ const clienteService = {
 
     // --- TELEFONE ---
     if (typeof telefone !== "string" && typeof telefone !== "number") {
-      throw new Error("Telefone inválido");
+      throw new Error("Telefone Dever ser apenas texto ou numero");
     }
 
-    // Remove caracteres como (), espaço e hífen
-    const telefoneLimpo = limparTelefone(telefone);
+    const telefoneTexto = String(telefone).trim();
+
+    if (!telefoneTexto) {
+      throw new Error("Telefone não pode ser vazio");
+    }
+
+    const contemCaracterInvalido = /[^\d\s\-()]/.test(telefoneTexto);
+
+    if (contemCaracterInvalido) {
+      throw new Error("Telefone só deve possuir numeros, traços e parenteses");
+    }
+
+    const telefoneLimpo = telefoneTexto.replace(/\D/g, "");
 
     if (telefoneLimpo.length !== 10 && telefoneLimpo.length !== 11) {
       throw new Error("Telefone deve conter 10 ou 11 dígitos");

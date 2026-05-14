@@ -31,7 +31,7 @@ function padronizarCPF(cpf) {
   return cpf.replace(/\D/g, "");
 }
 
-function limparTelefone(telefone) {
+function padronizarTelefone(telefone) {
   return String(telefone).replace(/\D/g, "");
 }
 
@@ -93,7 +93,7 @@ module.exports = {
   sanitizarTextoObrigatorios,
   sanitizarTextoOpcionais,
   padronizarCPF,
-  limparTelefone,
+  padronizarTelefone,
   padronizarEndereco,
   padronizarCidade,
   normalizarEmail,
