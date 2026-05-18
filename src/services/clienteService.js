@@ -81,23 +81,27 @@ const clienteService = {
     }
 
     // --- TELEFONE ---
+    
     if (typeof telefone !== "string" && typeof telefone !== "number") {
       throw new Error("Telefone Dever ser apenas texto ou numero");
     }
 
-    const telefoneTexto = String(telefone).trim();
 
-    if (!telefoneTexto) {
+    const converteTelefoneEmTexto = String(telefone);
+
+    const telefoneProcessado = converteTelefoneEmTexto.trim();
+
+    if (!telefoneProcessado) {
       throw new Error("Telefone não pode ser vazio");
     }
 
-    const contemCaracterInvalido = /[^\d\s\-()]/.test(telefoneTexto);
+    const contemCaracterInvalido = /[^\d\s\-()]/.test(telefoneProcessado);
 
     if (contemCaracterInvalido) {
       throw new Error("Telefone só deve possuir numeros, traços e parenteses");
     }
 
-    const telefoneLimpo = telefoneTexto.replace(/\D/g, "");
+    const telefoneLimpo = telefoneProcessado.replace(/\D/g, "");
 
     if (telefoneLimpo.length !== 10 && telefoneLimpo.length !== 11) {
       throw new Error("Telefone deve conter 10 ou 11 dígitos");
