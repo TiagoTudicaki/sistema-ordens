@@ -9,9 +9,27 @@ function validarTextoSimples(valor) {
 }
 
 function validarEndereco(endereco) {
-  return endereco.length >= 5 && /^[A-Za-zÀ-ÿ0-9\s,.-]+$/.test(endereco);
+  const palavras = endereco.trim().split(/\s+/);
+  
+  // Em endereços, só rejeita letras isoladas que NÃO sejam artigos/preposições
+  const palavrasValidas = ["a", "à", "e", "o"];
+  
+  const letrasSozinhas = palavras.filter(p => 
+    p.length === 1 && 
+    !p.includes('.') &&
+    !palavrasValidas.includes(p.toLowerCase())
+  );
+  
+  if (letrasSozinhas.length > 0) {
+    const erro = new Error(
+      'Endereço parece incompleto. Verifique se há espaços extras.'
+    );
+    erro.status = 400;
+    throw erro;
+  }
+  
+  return endereco;
 }
-
 function cpfContemCaracterInvalido(cpf) {
   return /[^\d\s.-]/.test(cpf);
 }

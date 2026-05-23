@@ -109,31 +109,27 @@ const clienteService = {
 
     // --- ENDEREÇO ---
     if (typeof endereco !== "string") {
-      throw new Error("Endereço inválido");
+      throw new Error("Endereço deve ser do tipo texto");
     }
 
-    const enderecoLimpo = sanitizarTextoObrigatorios(endereco);
+    const enderecoProcessado = endereco.trim();
 
-    if (enderecoLimpo === "") {
+    if(!enderecoProcessado){
       throw new Error("Endereço não pode ser vazio");
     }
 
-    const enderecoPadronizado = padronizarEndereco(enderecoLimpo);
+    const enderecoPadronizado = padronizarEndereco(enderecoProcessado);
 
-    const enderecoValido = validarEndereco(enderecoPadronizado);
-
-    if (!enderecoValido) {
-      throw new Error("Endereço inválido");
-    }
+   
 
     // --- CIDADE ---
     if (typeof cidade !== "string") {
-      throw new Error("Cidade inválida");
+      throw new Error("Cidade deve ser do tipo texto");
     }
 
-    const cidadeLimpo = sanitizarTextoObrigatorios(cidade);
+    const cidadeProcessada = cidade.trim();
 
-    if (cidadeLimpo === "") {
+    if (!cidadeProcessada) {
       throw new Error("Cidade não pode ser vazia");
     }
 

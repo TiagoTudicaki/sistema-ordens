@@ -35,8 +35,49 @@ function padronizarTelefone(telefone) {
   return String(telefone).replace(/\D/g, "");
 }
 
-function padronizarEndereco(endereco) {
-  return String(endereco).normalize("NFC").replace(/\s+/g, " ");
+function padronizarEndereco(texto) {
+  const preposicoes = [
+    "a",
+    "à",
+    "ao",
+    "aos",
+    "as",
+    "às",
+    "da",
+    "das",
+    "de",
+    "do",
+    "dos",
+    "e",
+    "em",
+    "na",
+    "nas",
+    "no",
+    "nos",
+    "o",
+    "os",
+    "por",
+    "para",
+  ];
+  //                    ↑ adiciona só essas 5 palavras extras
+
+  return texto
+    
+    .normalize("NFC")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .replace(/\s*'\s*/g, "'")
+    .split(/\s+/)
+    .map((palavra, index) => {
+      if (index !== 0 && preposicoes.includes(palavra)) {
+        return palavra;
+      }
+      return palavra
+        .split("'")
+        .map((parte) => parte.charAt(0).toUpperCase() + parte.slice(1))
+        .join("'");
+    })
+    .join(" ");
 }
 
 function padronizarCidade(cidade) {
