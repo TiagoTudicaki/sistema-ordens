@@ -133,13 +133,16 @@ const clienteService = {
       throw new Error("Cidade não pode ser vazia");
     }
 
-    const cidadePadronizada = padronizarCidade(cidadeLimpo);
-
-    const cidadeValida = validarTextoSimples(cidadePadronizada);
+    const cidadeValida = /^[A-Za-zÀ-ÿ\s']+$/.test(cidadeProcessada);
 
     if (!cidadeValida) {
       throw new Error("Cidade deve possuir apenas letras e espaços");
     }
+
+    const cidadePadronizada = padronizarCidade(cidadeProcessada);
+
+   
+
 
     // Objeto final já limpo, padronizado e validado
     const cliente = {

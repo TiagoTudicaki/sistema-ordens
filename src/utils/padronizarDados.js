@@ -81,19 +81,25 @@ function padronizarEndereco(texto) {
 }
 
 function padronizarCidade(cidade) {
-  const preposicoes = ["de", "da", "do", "dos", "das"];
-
-  return cidade
+const preposicoes = ["da", "de", "do", "das", "dos"];
+ 
+  return texto
     .toLowerCase()
+    .replace(/\s+/g, " ")
+    .replace(/\s*'\s*/g, "'")
     .split(/\s+/)
-    .map((palavra, index) => {
-      if (index !== 0 && preposicoes.includes(palavra)) {
+    .map((palavra,index) =>{
+      if(index !== 0 && preposicoes.includes(palavra)){
         return palavra;
       }
-      return palavra.charAt(0).toUpperCase() + palavra.slice(1);
-    })
+       return palavra
+      .split("'")
+       .map(parte => parte.charAt(0).toUpperCase() + parte.slice(1))
+       .join("'");
+      })
+    
     .join(" ");
-}
+  } 
 
 function normalizarEmail(email) {
   if (email == null) return email;
