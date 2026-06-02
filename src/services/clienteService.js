@@ -8,7 +8,6 @@ const {
 } = require("../utils/validarCampos");
 const {
   padronizarTexto,
-  sanitizarTextoObrigatorios,
   padronizarCPF,
   padronizarTelefone,
   padronizarEndereco,
@@ -172,35 +171,87 @@ const clienteService = {
 
     const { nome, cpf, telefone, endereco, cidade } = filtrosValidos;
 
-    if (nome && !validarTextoSimples(nome)) {
+   
+      //-----NOME--------
+
+    let nomeProcessado;
+
+   if(nome != null){
+    
+    nomeProcessado = String(nome).trim();
+    const nomeValido = /^[A-Za-zÀ-ÿ\s']+$/.test(nomeProcessado);
+
+    if (!nomeValido) {
       throw new Error("Nome deve conter apenas letras e espaços");
     }
-
-    if (cpf && cpfContemCaracterInvalido(cpf)) {
-      throw new Error("CPF inválido: cpf deve conter somente números");
+  } 
+      
+   
+   
+    
+    //----CPF------
+  
+    let cpfProcessado;
+  
+    if(cpf != null){
+    cpfProcessado = String(cpf).trim();
+    const cpfValido = /^[\d\s.-]+$/.test(cpfProcessado)
+   if (!cpfValido) {
+      throw new Error("CPF inválido: cpf deve conter apenas (número, ponto e traço)");
     }
+  } 
+  
+    //----Telefone----
 
-    if (telefone && telefoneContemCaracterInvalido(telefone)) {
-      throw new Error("Telefone contém caracteres inválidos");
+    let telefoneProcessado;
+  if(telefone != null){
+    
+    telefoneProcessado = String(telefone).trim();
+    const telefoneValido = /^[\d\s.()-]+$/.test(telefoneProcessado);
+
+    if (!telefoneValido) {
+      throw new Error("Telefone deve conter apenas número, parentes, ponto e traço");
     }
+  }
 
-    if (endereco && !filtraConsultaEndereco(endereco)) {
+    //----Endereço------ 
+
+    let enderecoProcessado;
+    if(endereco != null){
+      
+    
+    enderecoProcessado = String(endereco).trim();
+
+    const enderecoValido = /^[A-Za-zÀ-ÿ0-9\s',.-]+$/.test(enderecoProcessado);
+    
+    if (!enderecoValido) {
       throw new Error(
-        "Endereço inválido: mínimo 1 caracteres, apenas letras, números, espaços, vírgula, ponto e hífen",
+        "Endereço dever conter apenas letra, número, espaço, vírgula, ponto, hífen e apostrofo",
       );
     }
+  }
 
-    if (cidade && !validarTextoSimples(cidade)) {
-      throw new Error("Cidade deve conter apenas letras e espaços");
+    //-----Cidade----
+    
+    let cidadeProcessada;
+    if(cidade != null){
+    
+    cidadeProcessada = String(cidade).trim();
+
+    const cidadeValida = /^[A-Za-zÀ-ÿ\s']+$/.test(cidadeProcessada);
+
+    if (!cidadeValida) {
+      throw new Error("Cidade deve conter apenas letra, espaços e apóstrofo");
     }
+  }
 
-    const filtrosNormalizados = {};
+   const filtrosNormalizados = {};
 
-    if (nome) filtrosNormalizados.nome = padronizarTexto(nome);
-    if (cpf) filtrosNormalizados.cpf = limparCPF(cpf);
-    if (telefone) filtrosNormalizados.telefone = limparTelefone(telefone);
-    if (endereco) filtrosNormalizados.endereco = padronizarEndereco(endereco);
-    if (cidade) filtrosNormalizados.cidade = padronizarTexto(cidade);
+    if (nome != null) filtrosNormalizados.nome = padronizarTexto(nomeProcessado);
+     if (cpf != null) filtrosNormalizados.cpf = cpfProcessado.replace(/\D/g, "");
+    if (telefone != null) filtrosNormalizados.telefone = telefoneProcessado.replace(/\D/g, "");
+    if (endereco != null) filtrosNormalizados.endereco = padronizarEndereco(enderecoProcessado);
+    if (cidade != null) filtrosNormalizados.cidade = padronizarCidade(cidadeProcessada);
 
     if (filtrosNormalizados.cpf && filtrosNormalizados.cpf.length !== 11) {
       throw new Error("CPF deve conter 11 dígitos");
@@ -214,7 +265,6 @@ const clienteService = {
         throw new Error("Telefone deve conter 10 ou 11 dígitos");
       }
     }
-
     return await clienteModel.listar(filtrosNormalizados);
   },
 
@@ -235,19 +285,7 @@ const clienteService = {
   },
 
   async atualizar(clienteId, dados) {
-    if (!validarIdPositivoInt(clienteId)) {
-      throw new Error("ID inválido");
-    }
-
-    if (
-      Object.values(dados).every(
-        (campo) => campo == null || String(campo).trim() === "",
-      )
-    ) {
-      throw new Error(
-        "É obrigatório informar ao menos um campo para atualização",
-      );
-    }
+    
 
     const camposVazios = validarCamposVazios(dados);
 

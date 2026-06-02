@@ -27,13 +27,19 @@ const clienteController = {
   },
 
   async listar(req, res) {
+
+    const dados = req.query;
+
+    if(!dados || Object.keys(dados).length === 0 ){
+      return res.status(400).json({erro:"Requisição invalida"})
+    }
     try {
       const campos = {
-        nome: req.query.nome,
-        cpf: req.query.cpf,
-        telefone: req.query.telefone,
-        endereco: req.query.endereco,
-        cidade: req.query.cidade,
+        nome: dados.nome,
+        cpf: dados.cpf,
+        telefone: dados.telefone,
+        endereco: dados.endereco,
+        cidade: dados.cidade,
       };
 
       const clientes = await clienteService.listar(campos);
