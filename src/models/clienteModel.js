@@ -65,9 +65,39 @@ const clienteModel = {
   },
 
   async atualizar(clienteId, { nome, cpf, telefone, endereco, cidade }) {
+    const campos = [];
+    const valores = [];
+
+    if (nome !== undefined) {
+      campos.push("nome = ?");
+      valores.push(nome);
+    }
+
+    if (cpf !== undefined) {
+      campos.push("cpf = ?");
+      valores.push(cpf);
+    }
+
+    if (telefone !== undefined) {
+      campos.push("telefone = ?");
+      valores.push(telefone);
+    }
+
+    if (endereco !== undefined) {
+      campos.push("endereco = ?");
+      valores.push(endereco);
+    }
+
+    if (cidade !== undefined) {
+      campos.push("cidade = ?");
+      valores.push(cidade);
+    }
+
+    valores.push(clienteId);
+
     const [resultado] = await db.query(
-      "UPDATE clientes SET nome = ?, cpf = ?, telefone = ?, endereco = ?, cidade = ? WHERE  id = ?",
-      [nome, cpf, telefone, endereco, cidade, clienteId],
+      `UPDATE clientes SET ${campos.join(", ")}  WHERE  id = ?`,
+      valores,
     );
 
     return resultado;

@@ -80,11 +80,10 @@ const clienteService = {
     }
 
     // --- TELEFONE ---
-    
+
     if (typeof telefone !== "string" && typeof telefone !== "number") {
       throw new Error("Telefone Dever ser apenas texto ou numero");
     }
-
 
     const converteTelefoneEmTexto = String(telefone);
 
@@ -113,13 +112,11 @@ const clienteService = {
 
     const enderecoProcessado = endereco.trim();
 
-    if(!enderecoProcessado){
+    if (!enderecoProcessado) {
       throw new Error("Endereço não pode ser vazio");
     }
 
     const enderecoPadronizado = padronizarEndereco(enderecoProcessado);
-
-   
 
     // --- CIDADE ---
     if (typeof cidade !== "string") {
@@ -139,9 +136,6 @@ const clienteService = {
     }
 
     const cidadePadronizada = padronizarCidade(cidadeProcessada);
-
-   
-
 
     // Objeto final já limpo, padronizado e validado
     const cliente = {
@@ -171,87 +165,86 @@ const clienteService = {
 
     const { nome, cpf, telefone, endereco, cidade } = filtrosValidos;
 
-   
-      //-----NOME--------
+    //-----NOME--------
 
     let nomeProcessado;
 
-   if(nome != null){
-    
-    nomeProcessado = String(nome).trim();
-    const nomeValido = /^[A-Za-zÀ-ÿ\s']+$/.test(nomeProcessado);
+    if (nome != null) {
+      nomeProcessado = String(nome).trim();
+      const nomeValido = /^[A-Za-zÀ-ÿ\s']+$/.test(nomeProcessado);
 
-    if (!nomeValido) {
-      throw new Error("Nome deve conter apenas letras e espaços");
+      if (!nomeValido) {
+        throw new Error("Nome deve conter apenas letras e espaços");
+      }
     }
-  } 
-      
-   
-   
-    
+
     //----CPF------
-  
+
     let cpfProcessado;
-  
-    if(cpf != null){
-    cpfProcessado = String(cpf).trim();
-    const cpfValido = /^[\d\s.-]+$/.test(cpfProcessado)
-   if (!cpfValido) {
-      throw new Error("CPF inválido: cpf deve conter apenas (número, ponto e traço)");
+
+    if (cpf != null) {
+      cpfProcessado = String(cpf).trim();
+      const cpfValido = /^[\d\s.-]+$/.test(cpfProcessado);
+      if (!cpfValido) {
+        throw new Error(
+          "CPF inválido: cpf deve conter apenas (número, ponto e traço)",
+        );
+      }
     }
-  } 
-  
+
     //----Telefone----
 
     let telefoneProcessado;
-  if(telefone != null){
-    
-    telefoneProcessado = String(telefone).trim();
-    const telefoneValido = /^[\d\s.()-]+$/.test(telefoneProcessado);
+    if (telefone != null) {
+      telefoneProcessado = String(telefone).trim();
+      const telefoneValido = /^[\d\s.()-]+$/.test(telefoneProcessado);
 
-    if (!telefoneValido) {
-      throw new Error("Telefone deve conter apenas número, parentes, ponto e traço");
+      if (!telefoneValido) {
+        throw new Error(
+          "Telefone deve conter apenas número, parentes, ponto e traço",
+        );
+      }
     }
-  }
 
-    //----Endereço------ 
+    //----Endereço------
 
     let enderecoProcessado;
-    if(endereco != null){
-      
-    
-    enderecoProcessado = String(endereco).trim();
+    if (endereco != null) {
+      enderecoProcessado = String(endereco).trim();
 
-    const enderecoValido = /^[A-Za-zÀ-ÿ0-9\s',.-]+$/.test(enderecoProcessado);
-    
-    if (!enderecoValido) {
-      throw new Error(
-        "Endereço dever conter apenas letra, número, espaço, vírgula, ponto, hífen e apostrofo",
-      );
+      const enderecoValido = /^[A-Za-zÀ-ÿ0-9\s',.-]+$/.test(enderecoProcessado);
+
+      if (!enderecoValido) {
+        throw new Error(
+          "Endereço dever conter apenas letra, número, espaço, vírgula, ponto, hífen e apostrofo",
+        );
+      }
     }
-  }
 
     //-----Cidade----
-    
+
     let cidadeProcessada;
-    if(cidade != null){
-    
-    cidadeProcessada = String(cidade).trim();
+    if (cidade != null) {
+      cidadeProcessada = String(cidade).trim();
 
-    const cidadeValida = /^[A-Za-zÀ-ÿ\s']+$/.test(cidadeProcessada);
+      const cidadeValida = /^[A-Za-zÀ-ÿ\s']+$/.test(cidadeProcessada);
 
-    if (!cidadeValida) {
-      throw new Error("Cidade deve conter apenas letra, espaços e apóstrofo");
+      if (!cidadeValida) {
+        throw new Error("Cidade deve conter apenas letra, espaços e apóstrofo");
+      }
     }
-  }
 
-   const filtrosNormalizados = {};
+    const filtrosNormalizados = {};
 
-    if (nome != null) filtrosNormalizados.nome = padronizarTexto(nomeProcessado);
-     if (cpf != null) filtrosNormalizados.cpf = cpfProcessado.replace(/\D/g, "");
-    if (telefone != null) filtrosNormalizados.telefone = telefoneProcessado.replace(/\D/g, "");
-    if (endereco != null) filtrosNormalizados.endereco = padronizarEndereco(enderecoProcessado);
-    if (cidade != null) filtrosNormalizados.cidade = padronizarCidade(cidadeProcessada);
+    if (nome != null)
+      filtrosNormalizados.nome = padronizarTexto(nomeProcessado);
+    if (cpf != null) filtrosNormalizados.cpf = cpfProcessado.replace(/\D/g, "");
+    if (telefone != null)
+      filtrosNormalizados.telefone = telefoneProcessado.replace(/\D/g, "");
+    if (endereco != null)
+      filtrosNormalizados.endereco = padronizarEndereco(enderecoProcessado);
+    if (cidade != null)
+      filtrosNormalizados.cidade = padronizarCidade(cidadeProcessada);
 
     if (filtrosNormalizados.cpf && filtrosNormalizados.cpf.length !== 11) {
       throw new Error("CPF deve conter 11 dígitos");
@@ -285,45 +278,78 @@ const clienteService = {
   },
 
   async atualizar(clienteId, dados) {
-    
+    const filtrosValidos = consultaFiltrada(dados);
 
-    const camposVazios = validarCamposVazios(dados);
+    const { nome, cpf, telefone, endereco, cidade } = filtrosValidos;
 
-    if (camposVazios.length > 0) {
-      throw new Error("Campos não podem ser vazios ou com apenas espaços");
+    let nomeProcessado;
+    if (nome != null) {
+      nomeProcessado = String(nome).trim();
+      const nomeValido = /^[A-Za-zÀ-ÿ\s']+$/.test(nomeProcessado);
+      if (!nomeValido) {
+        throw new Error("Nome dever possuir apenas letra, espaço e acento");
+      }
     }
 
-    const { nome, cpf, telefone, endereco, cidade } = dados;
+    let cpfProcessado;
 
-    if (nome && !validarTextoSimples(nome)) {
-      throw new Error("Nome deve conter apenas letras e espaços");
+    if (cpf != null) {
+      cpfProcessado = String(cpf).trim();
+      const cpfValido = /^[\d\s.-]+$/.test(cpfProcessado);
+      if (!cpfValido) {
+        throw new Error(
+          "CPF inválido: cpf deve conter apenas (número, ponto e traço)",
+        );
+      }
     }
 
-    if (cpf && cpfContemCaracterInvalido(cpf)) {
-      throw new Error("CPF inválido: cpf deve conter somente números");
+    let telefoneProcessado;
+
+    if (telefone != null) {
+      telefoneProcessado = String(telefone).trim();
+      const telefoneValido = /^[\d\s.()-]+$/.test(telefoneProcessado);
+      if (!telefoneValido) {
+        throw new Error(
+          "Telefone deve conter apenas número, parentes, ponto e traço",
+        );
+      }
     }
 
-    if (telefone && telefoneContemCaracterInvalido(telefone)) {
-      throw new Error("Telefone contém caracteres inválidos");
+    let enderecoProcessado;
+
+    if (endereco != null) {
+      enderecoProcessado = String(endereco).trim();
+      const enderecoValido = /^[A-Za-zÀ-ÿ0-9\s',.-]+$/.test(enderecoProcessado);
+      if (!enderecoValido) {
+        throw new Error(
+          "Endereço dever conter apenas letra, número, espaço, vírgula, ponto, hífen e apostrofo",
+        );
+      }
     }
 
-    if (endereco && !filtraConsultaEndereco(endereco)) {
-      throw new Error(
-        "Endereço inválido: mínimo 1 caracteres, apenas letras, números, espaços, vírgula, ponto e hífen",
-      );
-    }
+    let cidadeProcessada;
 
-    if (cidade && !validarTextoSimples(cidade)) {
-      throw new Error("Cidade deve conter apenas letras e espaços");
+    if (cidade != null) {
+      cidadeProcessada = String(cidade).trim();
+      const cidadeValida = /^[A-Za-zÀ-ÿ\s']+$/.test(cidadeProcessada);
+
+      if (!cidadeValida) {
+        throw new Error("Cidade deve conter apenas letra, espaços e apóstrofo");
+      }
     }
 
     const filtrosNormalizados = {};
 
-    if (nome) filtrosNormalizados.nome = padronizarTexto(nome);
-    if (cpf) filtrosNormalizados.cpf = limparCPF(cpf);
-    if (telefone) filtrosNormalizados.telefone = limparTelefone(telefone);
-    if (endereco) filtrosNormalizados.endereco = padronizarEndereco(endereco);
-    if (cidade) filtrosNormalizados.cidade = padronizarTexto(cidade);
+    if (nomeProcessado)
+      filtrosNormalizados.nome = padronizarTexto(nomeProcessado);
+    if (cpfProcessado)
+      filtrosNormalizados.cpf = cpfProcessado.replace(/\D/g, "");
+    if (telefoneProcessado)
+      filtrosNormalizados.telefone = telefoneProcessado.replace(/\D/g, "");
+    if (enderecoProcessado)
+      filtrosNormalizados.endereco = padronizarEndereco(enderecoProcessado);
+    if (cidadeProcessada)
+      filtrosNormalizados.cidade = padronizarCidade(cidadeProcessada);
 
     if (filtrosNormalizados.cpf && filtrosNormalizados.cpf.length !== 11) {
       throw new Error("CPF deve conter 11 dígitos");

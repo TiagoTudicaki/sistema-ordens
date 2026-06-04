@@ -80,7 +80,7 @@ function padronizarEndereco(texto) {
     .join(" ");
 }
 
-function padronizarCidade(cidade) {
+function padronizarCidade(texto) {
 const preposicoes = ["da", "de", "do", "das", "dos"];
  
   return texto
