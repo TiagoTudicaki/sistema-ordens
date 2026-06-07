@@ -1,3 +1,4 @@
+const { json } = require("express");
 const tecnicoService = require("../services/tecnicoService");
 const tratarErro = require("../utils/tratarErro");
 const { validarCamposVazios } = require("../utils/validarCampos");
@@ -5,22 +6,22 @@ const { validarCamposVazios } = require("../utils/validarCampos");
 const tecnicoController = {
   async criar(req, res) {
     try {
-      const { nome, especialidade, matricula, telefone } = req.body;
+      const dados = req.body;
 
-      const camposObrigatorios = { nome, especialidade, matricula, telefone };
-
-      const camposVazios = validarCamposVazios(camposObrigatorios);
-
-      if (camposVazios) {
-        return res.status(400).json({
-          erro: "Os campos Nome, Especialidade, Matrícula, Telefone são obrigatórios",
-        });
+      if(!dados || Object.keys(dados).length === 0){
+        return res.status(400).json({erro:"Requisição vazia"});
       }
 
-      const dados = { nome, especialidade, matricula, telefone };
+      const tecnico = {
+        nome: dados.nome,
+        cargo: dados.cargo,
+        matricula: dados.matricula,
+        telefone: dados.telefone
 
-      const tecnico = await tecnicoService.criar(dados);
-      res.status(201).json(tecnico);
+      }
+
+      const tecnicoNovo = await tecnicoService.criar(tecnico);
+      res.status(201).json(tecnicoNovo);
     } catch (erro) {
       return tratarErro(res, erro);
     }

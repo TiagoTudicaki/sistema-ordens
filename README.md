@@ -256,7 +256,7 @@ CREATE TABLE clientes (
 CREATE TABLE tecnicos (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
-  especialidade VARCHAR(500) NOT NULL,
+  cargo VARCHAR(500) NOT NULL,
   matricula VARCHAR(20) NOT NULL UNIQUE,
   telefone VARCHAR(20) NOT NULL,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -364,7 +364,7 @@ A aplicação estará disponível em `http://localhost:3000`.
 ```json
 {
   "nome": "Carlos Souza",
-  "especialidade": "Instalação e Manutenção",
+  "cargo": "Mecânico",
   "matricula": "TEC001",
   "telefone": "14988887777"
 }

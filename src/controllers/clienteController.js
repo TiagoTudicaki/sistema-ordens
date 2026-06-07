@@ -13,7 +13,7 @@ const clienteController = {
 
       const cliente = {
         nome: dados.nome,
-        cpf: dados.cpf,
+        cpf: dados.cpf, 
         telefone: dados.telefone,
         endereco: dados.endereco,
         cidade: dados.cidade,

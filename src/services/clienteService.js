@@ -1,21 +1,14 @@
 const clienteModel = require("../models/clienteModel");
 const {
-  validarCamposVazios,
-  validarTextoSimples,
-  validarEndereco,
-  cpfContemCaracterInvalido,
   validarIdPositivoInt,
 } = require("../utils/validarCampos");
 const {
   padronizarTexto,
-  padronizarCPF,
-  padronizarTelefone,
   padronizarEndereco,
   padronizarCidade,
 } = require("../utils/padronizarDados");
 const {
   consultaFiltrada,
-  filtraConsultaEndereco,
 } = require("../utils/filtragemDeConsulta");
 
 const clienteService = {
@@ -67,9 +60,9 @@ const clienteService = {
       throw new Error("Cpf não pode ser vazio");
     }
 
-    contemCaracterInvalido = /[^\d\s.-]/.test(cpfTexto);
+    const cpfValido = /[^\d\s.-]/.test(cpfTexto);
 
-    if (contemCaracterInvalido) {
+    if (cpfValido) {
       throw new Error("CPF não deve conter letras ou caracteres especiais");
     }
 
