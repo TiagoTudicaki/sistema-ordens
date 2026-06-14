@@ -292,7 +292,10 @@ const clienteService = {
     let cpfProcessado;
 
     if (cpf != null) {
-      cpfProcessado = String(cpf).trim();
+      if(typeof cpf !== "string"){
+        throw new Error("Cpf inválido");
+      }
+      cpfProcessado = cpf.trim();
       const cpfValido = /^[\d\s.-]+$/.test(cpfProcessado);
       if (!cpfValido) {
         throw new Error(
@@ -304,7 +307,10 @@ const clienteService = {
     let telefoneProcessado;
 
     if (telefone != null) {
-      telefoneProcessado = String(telefone).trim();
+      if(typeof telefone !== "string"){
+        throw new Error("Telefone inválido");
+      }
+      telefoneProcessado = telefone.trim();
       const telefoneValido = /^[\d\s.()-]+$/.test(telefoneProcessado);
       if (!telefoneValido) {
         throw new Error(
