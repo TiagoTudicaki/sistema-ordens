@@ -110,14 +110,6 @@ if (telefonePadronizado.length !== 10 && telefonePadronizado.length !== 11) {
 
       return await tecnicoModel.criar(tecnico);
 
-
-   
-
-
-
-
-    
-
   },
 
   async listar() {

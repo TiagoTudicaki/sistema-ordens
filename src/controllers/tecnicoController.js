@@ -29,20 +29,17 @@ const tecnicoController = {
 
   async listar(req, res) {
 
-    const dados = req.query;
-
-      if(!dados || Object.keys(dados).length === 0){
-        return res.status(400).json({erro:"Requisição inválida"});
-      }
     try {
+      const dados = req.query;
 
-      const tecnicos = {
+      const campos = {
         nome: dados.nome,
         cargo: dados.cargo,
         matricula: dados.matricula,
         telefone: dados.telefone
       }
-      return await tecnicoService.listar(tecnicos);
+      const tecnicos =  await tecnicoService.listar(campos);
+      return res.status(200).json(tecnicos);
     } catch (erro) {
       return tratarErro(res, erro);
     }
