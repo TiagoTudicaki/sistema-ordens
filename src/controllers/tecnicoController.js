@@ -12,7 +12,7 @@ const tecnicoController = {
         return res.status(400).json({erro:"Requisição vazia"});
       }
 
-      const tecnico = {
+      const tecnico = {   
         nome: dados.nome,
         cargo: dados.cargo,
         matricula: dados.matricula,
@@ -28,9 +28,21 @@ const tecnicoController = {
   },
 
   async listar(req, res) {
+
+    const dados = req.query;
+
+      if(!dados || Object.keys(dados).length === 0){
+        return res.status(400).json({erro:"Requisição inválida"});
+      }
     try {
-      const tecnicos = await tecnicoService.listar();
-      res.status(200).json(tecnicos);
+
+      const tecnicos = {
+        nome: dados.nome,
+        cargo: dados.cargo,
+        matricula: dados.matricula,
+        telefone: dados.telefone
+      }
+      return await tecnicoService.listar(tecnicos);
     } catch (erro) {
       return tratarErro(res, erro);
     }

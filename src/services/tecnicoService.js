@@ -37,6 +37,78 @@ const tecnicoService = {
 
     //----Cargo----
 
+    if(typeof cargo !== "string"){
+  throw new Error("Cargo deve ser texto");
+}
+
+const cargoProcessado = cargo.trim();
+
+if(!cargoProcessado){
+  throw new Error("Cargo não pode ser vazio");
+}
+const cargoValido = /^[A-Za-zÀ-ÿ\s]+$/.test(cargoProcessado);
+
+if(!cargoValido){
+  throw new Error("Cargo deve possuir apenas letra,acento e espaço");
+}
+
+const cargoPadronizado = padronizarTexto(cargoProcessado);
+
+//----Matricula-----
+
+if(typeof matricula !== "string"){
+  throw new Error("Matricula deve ser apenas texto")
+}
+
+const matriculaProcessada = matricula.trim();
+
+if(!matriculaProcessada){
+  throw new Error("Matricula não pode ser vazia");
+}
+const matriculaValida = /^[\d\s]+$/.test(matriculaProcessada);
+
+if(!matriculaValida){
+  throw new Error("Matricula deve possuir apenas numeros");
+}
+
+const matriculaPadronizada = matriculaProcessada.replace(/\s+/g, "");
+
+if(matriculaPadronizada.length !== 3){
+  throw new Error("Matricula deve possuir apenas 3 digitos");
+}
+
+//-----Telefone----
+
+if(typeof telefone !== "string"){
+  throw new Error("Formato de telefone inválido");
+}
+
+const telefoneProcessado = telefone.trim();
+
+if(!telefoneProcessado){
+  throw new Error("Telefone não pode ser vazio");
+}
+
+const telefoneValido = /^[\d\s()-]+$/.test(telefoneProcessado);
+
+if(!telefoneValido){
+  throw new Error("Telefone deve possuir apenas números, parênteses e traços");
+}
+
+const telefonePadronizado = telefoneProcessado.replace(/\D/g, "");
+
+if (telefonePadronizado.length !== 10 && telefonePadronizado.length !== 11) {
+      throw new Error("Telefone deve conter 10 ou 11 dígitos");
+    }
+
+      const tecnico = {
+        nome:nomePadronizado,
+        cargo: cargoPadronizado,
+        matricula: matriculaPadronizada,
+        telefone: telefonePadronizado
+      }
+
+      return await tecnicoModel.criar(tecnico);
 
 
    
@@ -44,7 +116,8 @@ const tecnicoService = {
 
 
 
-    return tecnico;
+    
+
   },
 
   async listar() {

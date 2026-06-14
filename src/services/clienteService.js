@@ -50,23 +50,23 @@ const clienteService = {
     }
 
     // --- CPF ---
-    if (typeof cpf !== "string" && typeof cpf !== "number") {
-      throw new Error("Erro: CPF só pode ser do tipo texto ou numero");
+    if (typeof cpf !== "string") {
+      throw new Error("Erro: CPF só pode ser do tipo texto");
     }
 
-    const cpfTexto = String(cpf).trim();
+    const cpfProcessado = cpf.trim();
 
-    if (!cpfTexto) {
+    if (!cpfProcessado) {
       throw new Error("Cpf não pode ser vazio");
     }
 
-    const cpfValido = /[^\d\s.-]/.test(cpfTexto);
+    const cpfValido = /[^\d\s.-]/.test(cpfProcessado);
 
     if (cpfValido) {
       throw new Error("CPF não deve conter letras ou caracteres especiais");
     }
 
-    const cpfLimpo = cpfTexto.replace(/\D/g, "");
+    const cpfLimpo = cpfProcessado.replace(/\D/g, "");
 
     if (cpfLimpo.length !== 11) {
       throw new Error("CPF deve conter 11 digistos");
@@ -74,13 +74,12 @@ const clienteService = {
 
     // --- TELEFONE ---
 
-    if (typeof telefone !== "string" && typeof telefone !== "number") {
-      throw new Error("Telefone Dever ser apenas texto ou numero");
+    if (typeof telefone !== "string") {
+      throw new Error("Telefone Dever ser apenas texto");
     }
 
-    const converteTelefoneEmTexto = String(telefone);
+    const telefoneProcessado = telefone.trim();
 
-    const telefoneProcessado = converteTelefoneEmTexto.trim();
 
     if (!telefoneProcessado) {
       throw new Error("Telefone não pode ser vazio");

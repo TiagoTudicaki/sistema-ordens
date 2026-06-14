@@ -1,16 +1,16 @@
 const db = require("../config/database");
 
 const tecnicoModel = {
-  async criar({ nome, especialidade, matricula, telefone }) {
+  async criar({ nome, cargo, matricula, telefone }) {
     const [tecnicoNovo] = await db.query(
-      "INSERT INTO tecnicos(nome, especialidade, matricula, telefone)VALUES(?, ?, ?, ?)",
-      [nome, especialidade, matricula, telefone],
+      "INSERT INTO tecnicos(nome, cargo, matricula, telefone)VALUES(?, ?, ?, ?)",
+      [nome, cargo, matricula, telefone],
     );
 
     return {
       id: tecnicoNovo.insertId,
       nome,
-      especialidade,
+      cargo,
       matricula,
       telefone,
     };
