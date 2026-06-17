@@ -2,6 +2,7 @@ function padronizarTexto(texto) {
 const preposicoes = ["da", "de", "do", "das", "dos"];
  
   return texto
+    .trim()
     .toLowerCase()
     .replace(/\s+/g, " ")
     .replace(/\s*'\s*/g, "'")
@@ -62,7 +63,7 @@ function padronizarEndereco(texto) {
   //                    ↑ adiciona só essas 5 palavras extras
 
   return texto
-    
+    .trim()
     .normalize("NFC")
     .toLowerCase()
     .replace(/\s+/g, " ")
@@ -84,6 +85,7 @@ function padronizarCidade(texto) {
 const preposicoes = ["da", "de", "do", "das", "dos"];
  
   return texto
+    .trim()
     .toLowerCase()
     .replace(/\s+/g, " ")
     .replace(/\s*'\s*/g, "'")

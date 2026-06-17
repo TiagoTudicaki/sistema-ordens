@@ -112,7 +112,9 @@ if (telefonePadronizado.length !== 10 && telefonePadronizado.length !== 11) {
 
   },
 
-  async listar() {
+  async listar(campos) {
+
+    
     const tecnicos = await tecnicoModel.listar();
     return tecnicos;
   },
