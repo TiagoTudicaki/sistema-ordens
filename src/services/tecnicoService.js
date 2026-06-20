@@ -114,8 +114,94 @@ if (telefonePadronizado.length !== 10 && telefonePadronizado.length !== 11) {
 
   async listar(campos) {
 
-    
-    const tecnicos = await tecnicoModel.listar();
+     const filtrosValidos = consultaFiltrada(campos);
+
+    const { nome, cargo, matricula, telefone } = filtrosValidos;
+
+    //-----NOME--------
+
+    if (nome != null) {
+      if (typeof nome !== "string") {
+        throw new Error("Nome inválido");
+      }
+
+      const nomeValido = /^[A-Za-zÀ-ÿ\s']+$/.test(nome);
+
+      if (!nomeValido) {
+        throw new Error("Nome deve conter apenas letras e espaços");
+      }
+    }
+
+    //----CARGO------
+
+    if (cargo != null) {
+      if (typeof cargo !== "string") {
+        throw new Error("Cargo inválido");
+      }
+
+      const cargoValido = /^[A-Za-zÀ-ÿ\s']+$/.test(cargo);
+
+      if (!cargoValido) {
+        throw new Error("Cargo deve conter apenas letras e espaços");
+      }
+    }
+
+    //----MATRICULA----
+
+    if (matricula != null) {
+      if (typeof matricula !== "string") {
+        throw new Error("Matrícula inválida");
+      }
+
+      const matriculaValida = /^[\d\s]+$/.test(matricula);
+
+      if (!matriculaValida) {
+        throw new Error("Matrícula deve conter apenas números e espaços");
+      }
+
+    }
+
+    //----TELEFONE----
+
+    if (telefone != null) {
+      if (typeof telefone !== "string") {
+        throw new Error("Telefone inválido");
+      }
+
+      const telefoneValido = /^[\d\s()-]+$/.test(telefone);
+
+      if (!telefoneValido) {
+        throw new Error(
+          "Telefone deve conter apenas número, parênteses e traço",
+        );
+      }
+    }
+
+    const filtrosNormalizados = {};
+
+    if (nome != null) filtrosNormalizados.nome = padronizarTexto(nome);
+    if (cargo != null) filtrosNormalizados.cargo = padronizarTexto(cargo);
+    if (matricula != null)
+      filtrosNormalizados.matricula = matricula.replace(/\s/g, "");
+    if (telefone != null)
+      filtrosNormalizados.telefone = telefone.replace(/\D/g, "");
+
+    if(filtrosNormalizados.matricula){
+         if(filtrosNormalizados.matricula.length != 3){
+        throw new Error("Matricula deve possuir 3 digitos");
+    }
+    }
+
+    if (filtrosNormalizados.telefone) {
+      if (
+        filtrosNormalizados.telefone.length < 10 ||
+        filtrosNormalizados.telefone.length > 11
+      ) {
+        throw new Error("Telefone deve conter 10 ou 11 dígitos");
+      }
+    }
+
+    const tecnicos = await tecnicoModel.listar(filtrosNormalizados);
     return tecnicos;
   },
 
