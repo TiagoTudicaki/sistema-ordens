@@ -1,7 +1,9 @@
-const { json } = require("express");
+
 const tecnicoService = require("../services/tecnicoService");
-const tratarErro = require("../utils/tratarErro");
-const { validarCamposVazios } = require("../utils/validarCampos");
+const {tratarErro} = require("../utils/tratarErro");
+
+
+
 
 const tecnicoController = {
   async criar(req, res) {
@@ -39,8 +41,10 @@ const tecnicoController = {
         telefone: dados.telefone
       }
       const tecnicos =  await tecnicoService.listar(campos);
+      
       return res.status(200).json(tecnicos);
     } catch (erro) {
+      
       return tratarErro(res, erro);
     }
   },

@@ -1,6 +1,7 @@
 const tecnicoModel = require("../models/tecnicoModel");
 const { padronizarTexto } = require("../utils/padronizarDados");
 const {validarCamposVazios} = require("../utils/validarCampos");
+const {consultaFiltrada} = require('../utils/filtragemDeConsulta');
 
 const tecnicoService = {
   async criar(dados) {
@@ -191,15 +192,7 @@ if (telefonePadronizado.length !== 10 && telefonePadronizado.length !== 11) {
         throw new Error("Matricula deve possuir 3 digitos");
     }
     }
-
-    if (filtrosNormalizados.telefone) {
-      if (
-        filtrosNormalizados.telefone.length < 10 ||
-        filtrosNormalizados.telefone.length > 11
-      ) {
-        throw new Error("Telefone deve conter 10 ou 11 dígitos");
-      }
-    }
+ 
 
     const tecnicos = await tecnicoModel.listar(filtrosNormalizados);
     return tecnicos;

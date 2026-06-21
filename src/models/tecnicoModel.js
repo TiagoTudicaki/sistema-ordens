@@ -1,4 +1,5 @@
 const db = require("../config/database");
+const { validarCamposVazios } = require("../utils/validarCampos");
 
 const tecnicoModel = {
   async criar({ nome, cargo, matricula, telefone }) {
@@ -16,9 +17,37 @@ const tecnicoModel = {
     };
   },
 
-  async listar() {
-    const [tecnicos] = await db.query("SELECT * FROM tecnicos");
+  async listar(filtrosNormalizados) {
+    let sql = ("SELECT id, nome, cargo, matricula, telefone FROM tecnicos");
+   const condicoes = [];
+    const valores = [];
 
+    if(filtrosNormalizados.nome){
+      condicoes.push("nome LIKE ?");
+      valores.push(`%${filtrosNormalizados.nome}%`);
+    }
+
+    if(filtrosNormalizados.cargo){
+      condicoes.push("cargo LIKE ?");
+      valores.push(`%${filtrosNormalizados.cargo}%`);
+    }
+
+    if(filtrosNormalizados.matricula){
+      condicoes.push("matricula = ?");
+      valores.push(`${filtrosNormalizados.matricula}`);
+    }
+
+    if(filtrosNormalizados.telefone){
+      condicoes.push("telefone LIKE ?");
+      valores.push(`%${filtrosNormalizados.telefone}%`);
+    }
+
+    if(condicoes.length > 0){
+      sql += " WHERE " + condicoes.join(" AND ");
+    }
+
+    const[tecnicos] = await db.query(sql,valores);
+    
     return tecnicos;
   },
 
