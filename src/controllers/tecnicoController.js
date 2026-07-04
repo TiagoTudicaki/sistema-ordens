@@ -1,7 +1,7 @@
 
 const tecnicoService = require("../services/tecnicoService");
 const {tratarErro} = require("../utils/tratarErro");
-
+const {validarIdPositivoInt} = require("../utils/validarCampos")
 
 
 
@@ -69,19 +69,21 @@ const tecnicoController = {
     try {
       const { id } = req.params;
 
-      if (!id || isNaN(id)) {
+      const tecnicoId = Number(id);
+
+      if (!validarIdPositivoInt(tecnicoId)) {
         return res.status(400).json({ erro: "ID invalido" });
       }
 
-      if (Object.values(req.body).every((campo) => !campo)) {
+      const { nome, cargo, matricula, telefone } = req.body;
+
+      const dados = { nome, cargo, matricula, telefone };
+
+      if (Object.values(dados).every((campo) => !campo)) {
         return res
           .status(400)
           .json({ erro: "É necessário atualizar pelo menos um campo" });
       }
-
-      const { nome, especialidade, matricula, telefone } = req.body;
-
-      const dados = { nome, especialidade, matricula, telefone };
 
       const tecnico = await tecnicoService.atualizar(id, dados);
       res.status(200).json(tecnico);

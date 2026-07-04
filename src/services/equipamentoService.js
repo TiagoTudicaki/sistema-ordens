@@ -4,23 +4,27 @@ const {
   validarIdentificador,
   validarCamposVazios,
   validarTextoSimples,
-  validarTipoDeAr,
+  validarCampoEnumTipo,
   validarTextoSimplesOpcional
 } = require("../utils/validarCampos");
-const {
-  sanitizarTextoOpcionais,
-  padronizarTipoAr,
-  sanitizarTextoObrigatorios,
+const {  
   padronizarTexto,
-  padronizarCamposOpcionais,
-  padronizarLetrasNumeros
+  padronizarCapacidade,
+  padronizarTipoDeGas,
+  
 } = require("../utils/padronizarDados");
+
+const {consultaFiltrada} = require("../utils/filtragemDeConsulta");
 
 const equipamentoService = {
   async criar(dados) {
-    if (!dados || typeof dados !== "object") {
-      throw new Error("Requisição inválida");
-    }
+
+    console.log(dados);
+    
+    const camposExistentes = consultaFiltrada(dados);
+
+    
+
     const {
       cliente_id,
       tipo,
@@ -31,140 +35,110 @@ const equipamentoService = {
       serie,
       capacidade_btu,
       tipo_gas,
-    } = dados;
+    } = camposExistentes;
 
-    const clienteIdNumero = Number(cliente_id);
-
-    if (Number.isNaN(clienteIdNumero)) {
-      throw new Error("ID deve ser numero");
-    }
-
-    if (!validarIdPositivoInt(clienteIdNumero)) {
-      throw new Error("ID inválido");
-    }
-
-    if (tipo !== null && typeof tipo !== "string") {
-      throw new Error("Campo 'tipo' deve ser texto");
-    }
-
-    const tipoLimpo = sanitizarTextoOpcionais(tipo);
-
-    const tipoPadronizado = padronizarTipoAr(tipoLimpo);
-
+    const camposVazios = validarCamposVazios({cliente_id, local, identificador});
     
 
-    if (!validarTipoDeAr(tipoPadronizado)) {
-      throw new Error(`Tipo '${tipoPadronizado}' não existe. use : ${tipoValidos.join(", ")}`);
-    }
-
-    if (typeof local !== "string") {
-      throw new Error("Local deve ser texto");
-    }
-
-    const localLimpo = sanitizarTextoObrigatorios(local);
-
-    if (localLimpo === "") {
-      throw new Error("Local não pode ser vazio");
-    }
-
-    if (!validarTextoSimples(localLimpo)) {
-      throw new Error("Local não deve possuir numeros");
-    }
-
-    const localPadronizado = padronizarTexto(localLimpo);
-
-    if(identificador == null){
-      throw new Error("Identificador é obrigatório");
-    }
-
-    const identificadorStr = String(identificador);
-
-    const identificadorLimpo = sanitizarTextoObrigatorios(identificadorStr);
-
-    if(identificadorLimpo === ""){
-      throw new Error("Identificador não pode ser vazio");
-    }
-
-    if (!validarIdentificador(identificadorLimpo)) {
-      const erro = new Error(
-        "Identificador deve ser número de 1 a 4 dígitos (1, 15, 123)",
-      );
-      erro.status = 400;
-      throw erro;
-    }
-
-    if(marca !== null && typeof marca !== "string"){
-      throw new Error("Marca inválida");
-    }
-
-    const marcaLimpo = sanitizarTextoOpcionais(marca);
-
-    if(!validarTextoSimplesOpcional(marcaLimpo)){
-      throw new Error("Marca não poder ser numeros");
-    }
-
-    const marcaPadronizada = padronizarCamposOpcionais(marcaLimpo);
-
-    if(modelo !== null && typeof modelo !== "string" && typeof modelo !== "number"){
-      throw new Error("Modelo inválido");
+    if(camposVazios.length > 0){
+      throw new Error(`O(s) campo(s) ${camposVazios.join(", ")} são obrigátorio(s)`);
     }
 
 
-    const modeloStr = String(modelo);
+   //------Local-------
 
-    const modeloLimpo = sanitizarTextoOpcionais(modeloStr);
+   const localValido = /^[A-Za-zÀ-ÿ\s']+$/.test(local);
 
-    const modeloPadronizado = padronizarLetrasNumeros(modeloLimpo);
+   if(!localValido){
+    throw new Error("Local deve possuir apenas letra, espaço, apostrofo");
+   }
 
-    if(serie !== null && typeof serie !== "string" && typeof serie !== "number"){
-      throw new Error("O campo 'serie' deve ser apenas numero, texto e nulo");
+   //-----Identificador------
+
+   if(identificador.length != 2){
+    throw new Error("Identificador deve possuir 2 digitos");
+   }
+   const identificadorValido = /^[0-9]+$/.test(identificador);
+
+   if(!identificadorValido){
+    throw new Error("Identificador deve possuir apenas números");
+   }
+
+   //----Marca------
+
+   if(marca != null){
+    const marcaValida = /^[A-Za-zÀ-ÿ\s']+$/.test(marca);
+    if(!marcaValida){
+      throw new Error("Marca de possuir apenas letra,espaço e apostrofos");
     }
-    
-    const serieStr = String(serie);
+   }
 
-    const serieLimpo = sanitizarTextoOpcionais(serieStr);
+   //-----Modelo--------
 
-    const seriePadronizada = padronizarLetrasNumeros(serieLimpo);
+   if(modelo != null){
+    const modeloValido = /^[A-Za-zÀ-ÿ0-9\s-]+$/.test(modelo);
+    if(!modeloValido){
+      throw new Error("Modelo não deve possuir caracteres especiais ou ponto");
+    }
+   }
 
-    if(capacidade_btu !== null && typeof capacidade_btu !== "string" && typeof capacidade_btu !== "number"){
-      throw new Error("O campo 'capacidade_btu' deve ser apenas texto, numeros ou nulo");
-    } 
+   //------Serie------
 
-    const capacidadeBtuStr = String(capacidade_btu);
+   if(serie != null){
+    const serieValida =  /^[A-Za-zÀ-ÿ0-9\s-]+$/.test(serie);
+    if(!serieValida){
+      throw new Error("Serie não dever possuir caracteres especiais ou ponto");
+      
+    }
+   }
 
-    const capacidadeBtuLimpo = sanitizarTextoOpcionais(capacidadeBtuStr);
+   //-----Capacidade_btu------
 
-    
+   if(capacidade_btu != null){
+    const capacidade_btuValido = /^[A-Za-zÀ-ÿ0-9\s.]+$/.test(capacidade_btu);
+    if(!capacidade_btuValido){
+      throw new Error("Capacidade não possuir caracteres especiais e traços");
+    }
+   }
+
+   //----Tipo_gas------
+
+   if(tipo_gas != null){
+    const tipo_gasValido = /^[A-Za-zÀ-ÿ0-9\-]+$/.test(tipo_gas);
+    if(!tipo_gasValido){
+      throw new Error("O tipo do gas não deve possuir espaço ou caracteres especiais ou pontos");
+   }
+  }
+   const camposComDados = {};
+
+   camposComDados.cliente_id = cliente_id;
+   if(tipo != null){
+    camposComDados.tipo = validarCampoEnumTipo(tipo);
+   }
+   camposComDados.local = padronizarTexto(local);
+   camposComDados.identificador = identificador;
+   if(marca != null){
+    camposComDados.marca = padronizarTexto(marca);
+   }
+   if(modelo != null){
+    camposComDados.modelo = modelo;
+   }
+   if(serie != null){
+    camposComDados.serie = serie;
+   }
+   if(capacidade_btu != null){
+    camposComDados.capacidade_btu = padronizarCapacidade(capacidade_btu);
+   }
+   if(tipo_gas != null){
+    camposComDados.tipo_gas = padronizarTipoDeGas(tipo_gas);
+   }
 
 
-
+   const equipamento = await equipamentoModel.criar(camposComDados);
+   return equipamento;
+   
+   },
   
-
-
-
-    dados.tipo = dados.tipo?.trim().toLowerCase();
-    dados.local = dados.local?.trim().toLowerCase();
-    dados.marca = dados.marca?.trim().toLowerCase();
-    dados.modelo = dados.modelo?.trim().toLowerCase();
-    dados.serie = dados.serie?.trim().toLowerCase();
-    dados.capacidade_btu = dados.capacidade_btu?.trim().toLowerCase();
-    dados.tipo_gas = dados.tipo_gas?.trim().toLowerCase();
-
-    try {
-      const equipamento = await equipamentoModel.criar(dados);
-      return equipamento;
-    } catch (erro) {
-      if (erro.code === "ER_DUP_ENTRY") {
-        const erroCustom = new Error(
-          `Equipamento "${dados.identificador}" já existe no "${dados.local}"`,
-        );
-        erroCustom.status = 409;
-        throw erroCustom;
-      }
-
-      throw erro;
-    }
-  },
 
   async listar() {
     const equipamentos = await equipamentoModel.listar();

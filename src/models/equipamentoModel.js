@@ -9,12 +9,13 @@ const equipamentoModel = {
     marca,
     modelo,
     serie,
+    capacidade_btu,
     tipo_gas,
   }) {
     const [equipamentoNovo] = await db.query(
       `
-            INSERT INTO  equipamentos(cliente_id, tipo, local, identificador, marca, modelo, serie, tipo_gas)VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
-      [cliente_id, tipo, local, identificador, marca, modelo, serie, tipo_gas],
+            INSERT INTO  equipamentos(cliente_id, tipo, local, identificador, marca, modelo, serie, capacidade_btu, tipo_gas) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [cliente_id, tipo, local, identificador, marca, modelo, serie, capacidade_btu, tipo_gas],
     );
 
     return {
@@ -26,6 +27,7 @@ const equipamentoModel = {
       marca,
       modelo,
       serie,
+      capacidade_btu,
       tipo_gas,
     };
   },

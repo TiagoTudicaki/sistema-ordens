@@ -123,19 +123,20 @@ function padronizarLetrasNumeros(texto) {
   return texto.replace(/\s+/g, "").toLowerCase();
 }
 
-function padronizarBtus(texto) {
-  if (texto == null) return null;
+function padronizarCapacidade(capacidade) {
+  return capacidade
+  .replace(/\s+/g, "")
+  .replace(/./g,"")
+  .toLocaleUpperCase();
 
-  const textoMinusculo = texto.toLowerCase();
-
-  const matchK = textoMinusculo.match(/(\d+)\s*k/);
-
-  if (matchK) {
-    return String(Number(matchK[1]) * 1000);
-  }
-
-  return textoMinusculo.replace(/[^\d]/g, "");
 }
+
+function padronizarTipoDeGas(tipo_gas){
+  return tipo_gas
+  .replace(/\-/g,"")
+  .toLocaleUpperCase();
+}
+  
 
 module.exports = {
   padronizarTexto,
@@ -149,4 +150,6 @@ module.exports = {
   padronizarTipoAr,
   padronizarCamposOpcionais,
   padronizarLetrasNumeros,
+  padronizarCapacidade,
+  padronizarTipoDeGas,
 };

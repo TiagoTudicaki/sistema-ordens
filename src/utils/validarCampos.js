@@ -43,7 +43,7 @@ function validarIdPositivoInt(id) {
   return Number.isInteger(id) && id > 0;
 }
 
-const tiposValidos = [
+const tipos = [
     "acj",
     "hi-wall",
     "piso-teto",
@@ -57,12 +57,14 @@ const tiposValidos = [
   ];
 
 
-function validarTipoDeAr(texto) {
+function validarCampoEnumTipo(tipo) {
   
-  if (texto == null) return true;  
-  return tiposValidos.includes(texto);
-  
-}
+  if (!tipo.includes(tipo)){
+    throw new Error("Tipo inválido");
+  }
+
+  return tipo;
+}  
 
 function validarTextoSimplesOpcional(valor) {
   if(valor == null) return true;
@@ -81,6 +83,6 @@ module.exports = {
   cpfContemCaracterInvalido,
   validarIdPositivoInt,
   validarIdentificador,
-  validarTipoDeAr,
+  validarCampoEnumTipo,
   validarTextoSimplesOpcional
 };

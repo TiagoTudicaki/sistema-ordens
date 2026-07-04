@@ -30,11 +30,11 @@ const clienteModel = {
 
     if (filtrosNormalizados.cpf) {
       condicoes.push("cpf = ?");
-      valores.push(`%${filtrosNormalizados.cpf}%`);
+      valores.push(`${filtrosNormalizados.cpf}`);
     }
 
     if (filtrosNormalizados.telefone) {
-      condicoes.push("telefone = ?");
+      condicoes.push("telefone LIKE ?");
       valores.push(`%${filtrosNormalizados.telefone}%`);
     }
 

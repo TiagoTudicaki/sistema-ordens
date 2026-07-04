@@ -59,19 +59,40 @@ const tecnicoModel = {
     return tecnico[0];
   },
 
-  async atualizar(id, { nome, especialidade, matricula, telefone }) {
-    const [tecnicoAtualizado] = await db.query(
-      "UPDATE tecnicos SET nome = ?, especialidade = ?, matricula = ?, telefone = ? WHERE id = ?",
-      [nome, especialidade, matricula, telefone, id],
-    );
+  async atualizar(id, filtrosNormalizados) {
+    const condicoes = [];
+    const valores = [];
 
-    return {
-      id,
-      nome,
-      especialidade,
-      matricula,
-      telefone,
-    };
+    if(filtrosNormalizados.nome){
+      condicoes.push("nome = ?");
+      valores.push(filtrosNormalizados.nome);
+    }
+
+    if(filtrosNormalizados.cargo){
+      condicoes.push("cargo = ?");
+      valores.push(filtrosNormalizados.cargo);
+    }
+
+    if(filtrosNormalizados.matricula){
+      condicoes.push("matricula = ?");
+      valores.push(filtrosNormalizados.matricula);
+    }
+
+    if(filtrosNormalizados.telefone){
+      condicoes.push("telefone = ?");
+      valores.push(filtrosNormalizados.telefone);
+    }
+
+    const sql = `UPDATE tecnicos SET ${condicoes.join(", ")} WHERE id = ?`;
+    valores.push(id);
+    const [tecnicoAtualizado] = await db.query(sql, valores);
+
+    if(tecnicoAtualizado.affectedRows === 0){
+      const erro = new Error("Tecnico não encontrado");
+      erro.status = 404;
+      throw erro;
+    }
+    return {mensagem:"Tecnico atualizado com sucesso"};
   },
 
   async excluir(id) {

@@ -241,16 +241,9 @@ const clienteService = {
     if (filtrosNormalizados.cpf && filtrosNormalizados.cpf.length !== 11) {
       throw new Error("CPF deve conter 11 dígitos");
     }
+    const clientes = await clienteModel.listar(filtrosNormalizados);
 
-    if (filtrosNormalizados.telefone) {
-      if (
-        filtrosNormalizados.telefone.length < 10 ||
-        filtrosNormalizados.telefone.length > 11
-      ) {
-        throw new Error("Telefone deve conter 10 ou 11 dígitos");
-      }
-    }
-    return await clienteModel.listar(filtrosNormalizados);
+    return clientes;
   },
 
   async buscarPorId(clienteId) {
