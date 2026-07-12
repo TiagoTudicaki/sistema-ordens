@@ -115,9 +115,9 @@ if (telefonePadronizado.length !== 10 && telefonePadronizado.length !== 11) {
 
   async listar(campos) {
 
-     const filtrosValidos = consultaFiltrada(campos);
+     const camposValidos = consultaFiltrada(campos);
 
-    const { nome, cargo, matricula, telefone } = filtrosValidos;
+    const { nome, cargo, matricula, telefone } = camposValidos;
 
     //-----NOME--------
 
