@@ -39,8 +39,31 @@ function validarIdentificador(identificador) {
   return /^\d{1,4}$/.test(String(identificador).trim());
 }
 
-function validarIdPositivoInt(id) {
-  return Number.isInteger(id) && id > 0;
+function validarId(id) {
+   if(typeof id != "number" && typeof id != "string"){
+   throw new Error("ID inválido");
+}
+
+
+const idSomenteNumero = /^-?[0-9\.]+$/.test(id);
+
+if(!idSomenteNumero){
+   throw new Error("ID não deve possuir letras");
+}
+
+if(id <= 0){
+   throw new Error("ID deve ser maior que zero");
+}
+
+const idNumero = Number(id);
+
+const idNumeroInteiro = Number.isInteger(idNumero);
+
+if(!idNumeroInteiro){
+   throw new Error("ID deve ser um numero inteiro");
+}
+return idNumero;
+
 }
 
 const tipos = [
@@ -81,7 +104,7 @@ module.exports = {
   validarTextoSimples,
   validarEndereco,
   cpfContemCaracterInvalido,
-  validarIdPositivoInt,
+  validarId,
   validarIdentificador,
   validarCampoEnumTipo,
   validarTextoSimplesOpcional

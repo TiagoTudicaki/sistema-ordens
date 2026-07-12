@@ -1,6 +1,6 @@
 const equipamentoModel = require("../models/equipamentoModel");
 const {
-  validarIdPositivoInt,
+  validarId,
   validarIdentificador,
   validarCamposVazios,
   validarTextoSimples,
@@ -19,7 +19,6 @@ const {consultaFiltrada} = require("../utils/filtragemDeConsulta");
 const equipamentoService = {
   async criar(dados) {
 
-    console.log(dados);
     
     const camposExistentes = consultaFiltrada(dados);
 
@@ -44,6 +43,12 @@ const equipamentoService = {
       throw new Error(`O(s) campo(s) ${camposVazios.join(", ")} são obrigátorio(s)`);
     }
 
+    //----Cliente_id-----
+
+    const cliente_idValido = validarId(cliente_id);
+
+   
+
 
    //------Local-------
 
@@ -55,10 +60,12 @@ const equipamentoService = {
 
    //-----Identificador------
 
-   if(identificador.length != 2){
+   const identificadorTexto = String(identificador);
+
+   if(identificadorTexto.length != 2){
     throw new Error("Identificador deve possuir 2 digitos");
    }
-   const identificadorValido = /^[0-9]+$/.test(identificador);
+   const identificadorValido = /^[0-9]+$/.test(identificadorTexto);
 
    if(!identificadorValido){
     throw new Error("Identificador deve possuir apenas números");
@@ -111,12 +118,12 @@ const equipamentoService = {
   }
    const camposComDados = {};
 
-   camposComDados.cliente_id = cliente_id;
+   camposComDados.cliente_id = cliente_idValido;
    if(tipo != null){
     camposComDados.tipo = validarCampoEnumTipo(tipo);
    }
    camposComDados.local = padronizarTexto(local);
-   camposComDados.identificador = identificador;
+   camposComDados.identificador = identificadorTexto;
    if(marca != null){
     camposComDados.marca = padronizarTexto(marca);
    }
@@ -140,7 +147,11 @@ const equipamentoService = {
    },
   
 
-  async listar() {
+  async listar(campos) {
+
+    const camposExistentes = consultaFiltrada(campos);
+
+    
     const equipamentos = await equipamentoModel.listar();
     return equipamentos;
   },
