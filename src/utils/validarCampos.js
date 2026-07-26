@@ -39,20 +39,23 @@ function validarIdentificador(identificador) {
     throw new Error("Identificador inválido");
   }
 
-  identificador = identificador.trim();
+   identificador = identificador.trim();
+
+  const identificadorValido = /^[0-9]+$/.test(identificador);
+
+   if(!identificadorValido){
+    throw new Error("Identificador deve conter apenas dígitos, sem espaços ou outros caracteres");
+   }
+
+ 
 
   if(identificador.length != 2){
     throw new Error("Identificador deve possuir 2 digitos");
    }
-   const identificadorValido = /^[0-9]+$/.test(identificador);
-
-   if(!identificadorValido){
-    throw new Error("Identificador deve possuir apenas números");
-   }
+   
 
    return identificador;
 }
-
 function validarId(id) {
   
    if(typeof id != "number" && typeof id != "string"){
