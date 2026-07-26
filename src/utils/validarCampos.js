@@ -34,36 +34,43 @@ function cpfContemCaracterInvalido(cpf) {
   return /[^\d\s.-]/.test(cpf);
 }
 
-
 function validarIdentificador(identificador) {
-  return /^\d{1,4}$/.test(String(identificador).trim());
+  if(typeof identificador != "string"){
+    throw new Error("Identificador inválido");
+  }
+
+  identificador = identificador.trim();
+
+  if(identificador.length != 2){
+    throw new Error("Identificador deve possuir 2 digitos");
+   }
+   const identificadorValido = /^[0-9]+$/.test(identificador);
+
+   if(!identificadorValido){
+    throw new Error("Identificador deve possuir apenas números");
+   }
+
+   return identificador;
 }
 
 function validarId(id) {
+  
    if(typeof id != "number" && typeof id != "string"){
    throw new Error("ID inválido");
 }
+ const id_ApenasDigitos = /^[0-9]+$/.test(id);
 
-
-const idSomenteNumero = /^-?[0-9\.]+$/.test(id);
-
-if(!idSomenteNumero){
-   throw new Error("ID não deve possuir letras");
+if(!id_ApenasDigitos){
+    throw new Error("Id deve ser numeros inteiros e positivos");
 }
 
-if(id <= 0){
-   throw new Error("ID deve ser maior que zero");
+const id_Numerico = Number(id);
+
+if(id_Numerico == 0){
+    throw new Error("Id deve ser maior que zero");
 }
 
-const idNumero = Number(id);
-
-const idNumeroInteiro = Number.isInteger(idNumero);
-
-if(!idNumeroInteiro){
-   throw new Error("ID deve ser um numero inteiro");
-}
-return idNumero;
-
+return id_Numerico;
 }
 
 const tipos = [
@@ -81,8 +88,10 @@ const tipos = [
 
 
 function validarCampoEnumTipo(tipo) {
-  
-  if (!tipo.includes(tipo)){
+  if(typeof tipo != "string"){
+    throw new Error("Tipo deve ser string");
+  }
+  if (!tipos.includes(tipo)){
     throw new Error("Tipo inválido");
   }
 
@@ -92,6 +101,19 @@ function validarCampoEnumTipo(tipo) {
 function validarTextoSimplesOpcional(valor) {
   if(valor == null) return true;
   return /^[A-Za-zÀ-ÿ\s']+$/.test(valor);
+}
+
+function validarLocal(local){
+  if(typeof local !="string"){
+    throw new Error("Local inválido");
+
+  }
+
+   const localValido =  /^[A-Za-zÀ-ÿ\s']+$/.test(local);
+
+    if(!localValido){
+      throw new Error("Local não deve possuir números, caracteres especiais");
+    }
 }
 
 
@@ -107,5 +129,6 @@ module.exports = {
   validarId,
   validarIdentificador,
   validarCampoEnumTipo,
-  validarTextoSimplesOpcional
+  validarTextoSimplesOpcional,
+  validarLocal
 };
