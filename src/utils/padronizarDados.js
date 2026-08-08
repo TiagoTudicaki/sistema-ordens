@@ -136,6 +136,10 @@ function padronizarTipoDeGas(tipo_gas){
   .replace(/\-/g,"")
   .toLocaleUpperCase();
 }
+
+function padronizarModelo(modelo) {
+  return modelo.toUpperCase();
+}
   
 
 module.exports = {
@@ -152,4 +156,5 @@ module.exports = {
   padronizarLetrasNumeros,
   padronizarCapacidade,
   padronizarTipoDeGas,
-};
+  padronizarModelo,
+}
