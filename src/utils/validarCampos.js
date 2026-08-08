@@ -119,6 +119,36 @@ function validarLocal(local){
     }
 }
 
+function validarMarca(marca){
+  if(typeof marca != "string"){
+    throw new Error("Marca Inválida");
+  }
+
+
+  const marcaApenasCaracter = /^[A-Za-zÀ-ÿ\s']+$/.test(marca);
+
+  if(!marcaApenasCaracter){
+    throw new Error("Marca deve possuir apenas, letras, espaços e apostrofos");
+  }
+
+}
+
+function validarModelo(modelo) {
+  if (typeof modelo !== 'string') {
+    throw new Error('Modelo deve ser uma string.');
+  }
+
+  const modeloTrim = modelo.trim();
+
+  const regexModelo = /^[A-Za-z0-9-]+$/;
+
+  if (!regexModelo.test(modeloTrim)) {
+    throw new Error('Modelo deve conter apenas letras, números e traço.');
+  }
+
+  return modeloTrim;
+}
+
 
 
 
@@ -133,5 +163,7 @@ module.exports = {
   validarIdentificador,
   validarCampoEnumTipo,
   validarTextoSimplesOpcional,
-  validarLocal
+  validarLocal,
+  validarMarca,
+  validarModelo,
 };
