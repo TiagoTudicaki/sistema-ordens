@@ -149,6 +149,22 @@ function validarModelo(modelo) {
   return modeloTrim;
 }
 
+function validarSerie(serie) {
+  if (typeof serie !== 'string') {
+    throw new Error('Série deve ser uma string.');
+  }
+
+  const serieTrim = serie.trim();
+
+  const regexSerie = /^[A-Za-z0-9]+$/;
+
+  if (!regexSerie.test(serieTrim)) {
+    throw new Error('Série deve conter apenas letras e números.');
+  }
+
+  return serieTrim;
+}
+
 
 
 
@@ -166,4 +182,5 @@ module.exports = {
   validarLocal,
   validarMarca,
   validarModelo,
+  validarSerie,
 };
