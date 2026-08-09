@@ -140,6 +140,10 @@ function padronizarTipoDeGas(tipo_gas){
 function padronizarModelo(modelo) {
   return modelo.toUpperCase();
 }
+
+function padronizarSerie(serie) {
+  return serie.toUpperCase();
+}
   
 
 module.exports = {
@@ -157,4 +161,5 @@ module.exports = {
   padronizarCapacidade,
   padronizarTipoDeGas,
   padronizarModelo,
+  padronizarSerie,
 }
