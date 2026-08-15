@@ -5,16 +5,23 @@ const {
   validarCamposVazios,
   validarTextoSimples,
   validarCampoEnumTipo,
-  validarTextoSimplesOpcional
+  validarTextoSimplesOpcional,
+  validarLocal,
+  validarMarca,
+  validarModelo,
+  validarSerie,
 } = require("../utils/validarCampos");
 const {  
   padronizarTexto,
   padronizarCapacidade,
   padronizarTipoDeGas,
+  padronizarModelo,
+  padronizarSerie,
   
 } = require("../utils/padronizarDados");
 
 const {consultaFiltrada} = require("../utils/filtragemDeConsulta");
+const valoresTrimados = require("../utils/sanitizarDados");
 
 const equipamentoService = {
   async criar(dados) {
@@ -149,12 +156,31 @@ const equipamentoService = {
 
   async listar(campos) {
 
-    const camposExistentes = consultaFiltrada(campos);
+  const camposExistentes = consultaFiltrada(campos);
 
-    
-    const equipamentos = await equipamentoModel.listar();
-    return equipamentos;
-  },
+  const camposPermitidos = [
+    'cliente_id',
+    'tipo',
+    'local',
+    'identificador',
+    'marca',
+    'modelo',
+    'serie',
+    'capacidade_btu',
+    'tipo_gas',
+  ];
+
+  const camposComDados = {};
+
+  for (const campo of camposPermitidos) {
+    if (camposExistentes[campo] != null) {
+      camposComDados[campo] = camposExistentes[campo];
+    }
+  }
+
+  const equipamentos = await equipamentoModel.listar(camposComDados);
+  return equipamentos;
+},
 
   async buscarPorId(id) {
     const equipamento = await equipamentoModel.buscarPorId(id);
