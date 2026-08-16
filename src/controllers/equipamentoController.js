@@ -72,9 +72,7 @@ const equipamentoController = {
     try {
       const { id } = req.params;
 
-      if (!id || isNaN(id)) {
-        return res.status(400).json({ erro: "ID inválido" });
-      }
+      validarId(id);
 
       const equipamento = await equipamentoService.buscarPorId(id);
       res.status(200).json(equipamento);
