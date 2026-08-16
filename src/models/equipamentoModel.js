@@ -15,7 +15,17 @@ const equipamentoModel = {
     const [equipamentoNovo] = await db.query(
       `
             INSERT INTO  equipamentos(cliente_id, tipo, local, identificador, marca, modelo, serie, capacidade_btu, tipo_gas) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [cliente_id, tipo, local, identificador, marca, modelo, serie, capacidade_btu, tipo_gas],
+      [
+        cliente_id,
+        tipo,
+        local,
+        identificador,
+        marca,
+        modelo,
+        serie,
+        capacidade_btu,
+        tipo_gas,
+      ],
     );
 
     return {
@@ -32,8 +42,43 @@ const equipamentoModel = {
     };
   },
 
-  async listar() {
-    const [equipamentos] = await db.query("SELECT * FROM  equipamentos");
+  async listar(camposComDados) {
+    let sql =
+      "SELECT cliente_id, tipo, local, identificador, marca, modelo, serie, capacidade_btu, tipo_gas FROM equipamentos";
+
+    const camposParciais = [
+      "marca",
+      "modelo",
+      "local",
+      "identificador",
+      "serie",
+      "capacidade_btu",
+      "tipo_gas",
+    ];
+    const camposExatos = ["cliente_id", "tipo"];
+
+    const condicoes = [];
+    const valores = [];
+
+    for (const campo of camposParciais) {
+      if (camposComDados[campo] != null) {
+        condicoes.push(`${campo} LIKE ?`);
+        valores.push(`%${camposComDados[campo]}%`);
+      }
+    }
+
+    for (const campo of camposExatos) {
+      if (camposComDados[campo] != null) {
+        condicoes.push(`${campo} = ?`);
+        valores.push(camposComDados[campo]);
+      }
+    }
+
+    if (condicoes.length > 0) {
+      sql += " WHERE " + condicoes.join(" AND ");
+    }
+
+    const [equipamentos] = await db.query(sql, valores);
 
     return equipamentos;
   },
