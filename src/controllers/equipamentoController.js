@@ -1,6 +1,6 @@
 const equipamentoService = require("../services/equipamentoService");
 const tratarErro = require("../utils/tratarErro");
-const {validarIdPositivoInt } = require("../utils/validarCampos");
+const {validarId } = require("../utils/validarCampos");
 
 const equipamentoController = {
   async criar(req, res) {
@@ -8,6 +8,8 @@ const equipamentoController = {
     
     try {
       const dados = req.body;
+
+      console.log(dados);
       
       if(!dados || Object.keys(dados).length === 0){
        return res.status(400).json({erro:"Requisição inválida"});
@@ -15,7 +17,7 @@ const equipamentoController = {
 
       const clienteIdNumero = Number(dados.cliente_id);
 
-      if (!validarIdPositivoInt(clienteIdNumero)) {
+      if (!validarId(clienteIdNumero)) {
         return res.status(400).json({ erro: "cliente_id é inválido" });
       }
 
@@ -60,7 +62,7 @@ const equipamentoController = {
      }
 
      const equipamentos = await equipamentoService.listar(campos);
-     return equipamentos;
+     return res.status(200).json(equipamentos);
     } catch (erro) {
       return tratarErro(res, erro);
     }
