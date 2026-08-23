@@ -87,35 +87,22 @@ const equipamentoController = {
 
       validarId(id);
 
-      if (Object.values(req.body).every((campo) => !campo)) {
-        return res
-          .status(400)
-          .json({ erro: "É necessário pelo menos alterar um campo" });
-      }
+     const dados = req.body;
+     const camposPermitidos = [
+      'cliente_id',
+        'tipo',
+        'local',
+        'identificador',
+        'marca',
+        'modelo',
+        'serie',
+        'capacidade_btu',
+        'tipo_gas',
+     ]
 
-      const {
-        cliente_id,
-        tipo,
-        local,
-        identificador,
-        marca,
-        modelo,
-        serie,
-        tipo_gas,
-      } = req.body;
+     const camposExistentes = filtrarCampos(dados, camposPermitidos);
 
-      const dados = {
-        cliente_id,
-        tipo,
-        local,
-        identificador,
-        marca,
-        modelo,
-        serie,
-        tipo_gas,
-      };
-
-      const equipamento = await equipamentoService.atualizar(id, dados);
+      const equipamento = await equipamentoService.atualizar(id, camposExistentes);
       res.status(200).json(equipamento);
     } catch (erro) {
       return tratarErro(res, erro);
