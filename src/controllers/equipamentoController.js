@@ -1,18 +1,17 @@
 const equipamentoService = require("../services/equipamentoService");
+const { consultaFiltrada,filtrarCampos } = require("../utils/filtragemDeConsulta");
 const tratarErro = require("../utils/tratarErro");
-const {validarId } = require("../utils/validarCampos");
+const { validarId } = require("../utils/validarCampos");
 
 const equipamentoController = {
   async criar(req, res) {
-    
-    
     try {
       const dados = req.body;
 
       console.log(dados);
-      
-      if(!dados || Object.keys(dados).length === 0){
-       return res.status(400).json({erro:"Requisição inválida"});
+
+      if (!dados || Object.keys(dados).length === 0) {
+        return res.status(400).json({ erro: "Requisição inválida" });
       }
 
       const clienteIdNumero = Number(dados.cliente_id);
@@ -31,38 +30,39 @@ const equipamentoController = {
         serie: dados.serie,
         capacidade_btu: dados.capacidade_btu,
         tipo_gas: dados.tipo_gas,
-      } ;
+      };
 
-     
-      
       const novoEquipamento = await equipamentoService.criar(equipamento);
-      
+
       return res.status(201).json(novoEquipamento);
-      
     } catch (erro) {
       console.log(erro);
-      return res.status(500).json({erro:"essa mensagem é a exibida"});
+      return res.status(500).json({ erro: "essa mensagem é a exibida" });
     }
   },
 
   async listar(req, res) {
     try {
-     const dados = req.query;
-     
-     const campos = {
-      cliente_id: dados.cliente_id,
-      tipo: dados.tipo,
-      local: dados.local,
-      identificador: dados.identificador,
-      marca: dados.marca,
-      modelo: dados.modelo,
-      serie: dados.serie,
-      capacidade_btu: dados.capacidade_btu,
-      tipo_gas: dados.tipo_gas,
-     }
+      const dados = req.query;
 
-     const equipamentos = await equipamentoService.listar(campos);
-     return res.status(200).json(equipamentos);
+      const camposPermitidos = [
+        'cliente_id',
+        'tipo',
+        'local',
+        'identificador',
+        'marca',
+        'modelo',
+        'serie',
+        'capacidade_btu',
+        'tipo_gas',
+      ]
+    
+
+      const camposExistentes = filtrarCampos(dados, camposPermitidos);
+
+
+      const equipamentos = await equipamentoService.listar(camposExistentes);
+      return res.status(200).json(equipamentos);
     } catch (erro) {
       return tratarErro(res, erro);
     }
