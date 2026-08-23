@@ -154,31 +154,10 @@ const equipamentoService = {
    },
   
 
-  async listar(campos) {
+  async listar(camposExistentes) {
 
-  const camposExistentes = consultaFiltrada(campos);
-
-  const camposPermitidos = [
-    'cliente_id',
-    'tipo',
-    'local',
-    'identificador',
-    'marca',
-    'modelo',
-    'serie',
-    'capacidade_btu',
-    'tipo_gas',
-  ];
-
-  const camposComDados = {};
-
-  for (const campo of camposPermitidos) {
-    if (camposExistentes[campo] != null) {
-      camposComDados[campo] = camposExistentes[campo];
-    }
-  }
-
-  const equipamentos = await equipamentoModel.listar(camposComDados);
+  
+  const equipamentos = await equipamentoModel.listar(camposExistentes);
   return equipamentos;
 },
 
@@ -193,20 +172,20 @@ const equipamentoService = {
   },
 
   async atualizar(id, dados) {
-    dados.tipo = dados.tipo?.trim().toLowerCase();
-    dados.local = dados.local?.trim().toLowerCase();
-    dados.marca = dados.marca?.trim().toLowerCase();
-    dados.modelo = dados.modelo?.trim().toLowerCase();
-    dados.serie = dados.serie?.trim().toLowerCase();
-    dados.capacidade_btu = dados.capacidade_btu?.trim().toLowerCase();
-    dados.tipo_gas = dados.tipo_gas?.trim().toLowerCase();
+    const camposExistentes = consultaFiltrada(dados);
+     
+    const {
+      cliente_id,
+      tipo,
+      local,
+      identificador,
+      marca,
+      modelo,
+      serie,
+      capacidade_btu,
+      tipo_gas,
+    } = camposExistentes
 
-    const { identificador } = dados;
-    if (identificador?.trim() && !/^\d{1,4}$/.test(identificador.trim())) {
-      throw { status: 400, message: "Número 1-4 dígitos" };
-    }
-
-    return await equipamentoModel.atualizar(id, dados);
   },
 
   async excluir(id) {
