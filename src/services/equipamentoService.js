@@ -171,20 +171,56 @@ const equipamentoService = {
     return equipamento;
   },
 
-  async atualizar(id, dados) {
-    const camposExistentes = consultaFiltrada(dados);
-     
-    const {
-      cliente_id,
-      tipo,
-      local,
-      identificador,
-      marca,
-      modelo,
-      serie,
-      capacidade_btu,
-      tipo_gas,
-    } = camposExistentes
+  async atualizar(id, camposExistentes) {
+    
+    if(Object.keys(camposExistentes).length === 0){
+      const erro = new Error("É necessário alterar pelos menos um campo");
+      erro.status = 400;
+      throw erro;
+    } 
+
+    const camposTrimados = valoresTrimados(camposExistentes);
+    
+    const dados = {};
+
+    if(camposTrimados.cliente_id != null){
+      dados.cliente_id = validarId(camposTrimados.cliente_id);
+    }
+
+    if(camposTrimados.tipo !=  null){
+      dados.tipo = validarCampoEnumTipo(camposTrimados.tipo);
+    }
+
+    if(camposTrimados.local != null){
+      dados.local = padronizarTexto(validarLocal(camposTrimados.local));
+    }
+
+    if(camposTrimados.identificador != null){
+      dados.identificador = validarIdentificador(camposTrimados.identificador);
+    }
+
+    if(camposTrimados.marca != null){
+      dados.marca = padronizarTexto(validarMarca(camposTrimados.marca));
+    }
+
+    if(camposTrimados.modelo != null){
+      dados.modelo = validarModelo(camposTrimados.modelo);
+    }
+
+    if(camposTrimados.serie != null){
+      dados.serie = validarSerie(camposTrimados.serie);
+    } 
+
+    if(camposTrimados.capacidade_btu != null){
+      dados.capacidade_btu = padronizarCapacidade(camposTrimados.capacidade_btu);
+    }
+
+    if(camposTrimados.tipo_gas != null){
+      dados.tipo_gas = padronizarTipoDeGas(camposTrimados.tipo_gas);
+    }
+
+    const equipamento = await equipamentoModel.atualizar(id, dados);
+    return equipamento;
 
   },
 
