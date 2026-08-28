@@ -85,43 +85,85 @@ const equipamentoModel = {
 
   async buscarPorId(id) {
     const [equipamento] = await db.query(
-      "SELECT * FROM equipamentos WHERE id = ?",
+      `SELECT 
+       
+       
+       clientes.nome AS cliente_nome,
+       equipamentos.tipo,
+       equipamentos.local,
+       equipamentos.identificador,
+       equipamentos.marca,
+       equipamentos.modelo,
+       equipamentos.serie,
+       equipamentos.capacidade_btu,
+       equipamentos.tipo_gas,
+       equipamentos.criado_em
+     FROM equipamentos
+     JOIN clientes ON equipamentos.cliente_id = clientes.id
+     WHERE equipamentos.id = ?`,
       [id],
     );
 
     return equipamento[0];
   },
 
-  async atualizar(
-    id,
-    { cliente_id, tipo, local, identificador, marca, modelo, serie, tipo_gas },
-  ) {
-    const [equipamentoAtualizado] = await db.query(
-      "UPDATE equipamentos SET cliente_id = ?, tipo = ?,local = ?, identificador = ?, marca = ?, modelo = ?, serie = ?, tipo_gas = ?   WHERE id = ?",
-      [
-        cliente_id,
-        tipo,
-        local,
-        identificador,
-        marca,
-        modelo,
-        serie,
-        tipo_gas,
-        id,
-      ],
-    );
+  async atualizar(id, dados)
+     {
+    
+    const campo = [];
+    const valor = [];
 
-    return {
-      id,
-      cliente_id,
-      tipo,
-      local,
-      identificador,
-      marca,
-      modelo,
-      serie,
-      tipo_gas,
-    };
+    if(dados.cliente_id != null){
+      campo.push("cliente_id = ?");
+      valor.push(dados.cliente_id);
+    }
+
+    if(dados.tipo != null){
+      campo.push("tipo = ?");
+      valor.push(dados.tipo);
+    }
+
+    if(dados.local != null){
+      campo.push("local = ?");
+      valor.push(dados.local);
+    }
+
+    if(dados.identificador != null){
+      campo.push("identificador = ?");
+      valor.push(dados.identificador);
+    }
+
+    if(dados.marca != null){
+      campo.push("marca = ?");
+      valor.push(dados.marca);
+    }
+
+    if(dados.modelo != null){
+      campo.push("modelo = ?");
+      valor.push(dados.modelo);
+    }
+
+    if(dados.serie != null){
+      campo.push("serie = ?");
+      valor.push(dados.serie);
+    }
+
+    if(dados.capacidade_btu != null){
+      campo.push("capacidade_btu = ?");
+      valor.push(dados.capacidade_btu);
+    }
+
+    if(dados.tipo_gas != null){
+      campo.push("tipo_gas = ?");
+      valor.push(dados.tipo_gas);
+    }
+
+    valor.push(id);
+
+    const [resultado] = await db.query(`UPDATE equipamentos SET ${campo.join(", ")} WHERE id = ?`, valor);
+    return resultado;
+
+     
   },
 
   async excluir(id) {
