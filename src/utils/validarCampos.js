@@ -117,6 +117,8 @@ function validarLocal(local){
     if(!localValido){
       throw new Error("Local não deve possuir números, caracteres especiais");
     }
+
+    return local;
 }
 
 function validarMarca(marca){
@@ -165,6 +167,28 @@ function validarSerie(serie) {
   return serieTrim;
 }
 
+function validarcamposObrigatorios(dados, camposNecessarios){
+
+  
+  const camposFaltando = [];
+  for(const campo of camposNecessarios){
+    if(dados[campo] == null){
+     camposFaltando.push(campo);
+    }
+  }
+
+  if(camposFaltando.length > 0){
+    if(camposFaltando.length > 1){
+      throw new Error(`Os campos ${camposFaltando.join(", ")} são obrigatórios`);
+    }else{
+      throw new Error(`O campo ${camposFaltando} é obrigatório`);
+    }
+    
+  }
+
+  return dados;
+}
+
 
 
 
@@ -183,4 +207,5 @@ module.exports = {
   validarMarca,
   validarModelo,
   validarSerie,
+  validarcamposObrigatorios,
 };
