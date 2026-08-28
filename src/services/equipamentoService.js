@@ -224,15 +224,15 @@ const equipamentoService = {
 
   },
 
-  async excluir(id) {
-    const equipamento = await equipamentoModel.excluir(id);
-    if (!equipamento) {
-      const erro = new Error("Equipamento não encontrado");
-      erro.status = 404;
-      throw erro;
-    }
-    return equipamento;
-  },
+ async excluir(id) {
+  const resultado = await equipamentoModel.excluir(id);
+  if (resultado.affectedRows === 0) {
+    const erro = new Error("Equipamento não encontrado");
+    erro.status = 404;
+    throw erro;
+  }
+  return resultado;
+},
 };
 
 module.exports = equipamentoService;

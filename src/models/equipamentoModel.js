@@ -166,11 +166,13 @@ const equipamentoModel = {
      
   },
 
-  async excluir(id) {
-    await db.query("DELETE FROM equipamentos WHERE id = ?", [id]);
-
-    return { Mensagem: "Equipamento excluido" };
-  },
+async excluir(id) {
+  const [resultado] = await db.query(
+    "DELETE FROM equipamentos WHERE id = ?",
+    [id]
+  );
+  return resultado; // tem resultado.affectedRows
+},
 };
 
 module.exports = equipamentoModel;
