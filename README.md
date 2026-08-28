@@ -303,6 +303,7 @@ CREATE TABLE `ordens` (
   criado_em timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   finalizado_em timestamp NULL DEFAULT NULL,
   custo_total decimal(10,2) DEFAULT '0.00',
+  mao_de_obra decimal(10,2) DEFAULT '0.00',
   PRIMARY KEY (id),
   KEY fk_ordens_cliente (cliente_id),
   KEY fk_ordens_equipamento (equipamento_id),
