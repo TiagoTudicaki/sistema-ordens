@@ -1,50 +1,18 @@
 const ordemService = require("../services/ordemService");
 const tratarErro = require("../utils/tratarErro");
+const {validarCamposObrigatorios, validarId} = require("../utils/validarCampos");
 
 const ordemController = {
   async criar(req, res) {
     try {
-      const {
-        cliente_id,
-        equipamento_id,
-        tecnico_id,
-        tipo_servico,
-        status,
-        problema,
-        diagnostico,
-        solucao,
-        detalhes,
-        materiais,
-        checklist,
-      } = req.body;
+        const dados = req.body;
 
-      if (!cliente_id || isNaN(Number(cliente_id))) {
-        return res.status(400).json({
-          erro: "cliente_id inválido",
-        });
-      }
+        const camposNecessarios = ['cliente_id', 'tipo_servico', 'status'];
 
-      if (!tipo_servico?.trim()) {
-        return res.status(400).json({
-          erro: "tipo_servico inválido",
-        });
-      }
+        const camposObrigatorios = validarCamposObrigatorios(dados,camposNecessarios);
 
-      const dados = {
-        cliente_id,
-        equipamento_id,
-        tecnico_id,
-        tipo_servico,
-        status,
-        problema,
-        diagnostico,
-        solucao,
-        detalhes,
-        materiais,
-        checklist,
-      };
-
-      const ordem = await ordemService.criar(dados);
+      
+      const ordem = await ordemService.criar(camposObrigatorios);
       res.status(201).json(ordem);
     } catch (erro) {
       return tratarErro(res, erro);
