@@ -167,7 +167,7 @@ function validarSerie(serie) {
   return serieTrim;
 }
 
-function validarcamposObrigatorios(dados, camposNecessarios){
+function validarCamposObrigatorios(dados, camposNecessarios){
 
   
   const camposFaltando = [];
@@ -186,7 +186,7 @@ function validarcamposObrigatorios(dados, camposNecessarios){
     
   }
 
-  return dados;
+  
 }
 
 
@@ -207,5 +207,5 @@ module.exports = {
   validarMarca,
   validarModelo,
   validarSerie,
-  validarcamposObrigatorios,
+  validarCamposObrigatorios,
 };
