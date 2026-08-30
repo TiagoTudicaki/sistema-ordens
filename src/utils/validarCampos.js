@@ -4,21 +4,107 @@ function validarCamposVazios(camposObrigatorios) {
     .map(([campo]) => campo);
 }
 
+function validarNome(nome) {
+    if (typeof nome != "string") {
+        throw new Error("Nome deve ser texto");
+    }
+
+    const nomeLimpo = nome.trim().replace(/\s+/g, " ");
+
+    if (nomeLimpo === "") {
+        throw new Error("Nome não pode ser vazio");
+    }
+
+    if (!/^[A-Za-zÀ-ÿ\s']+$/.test(nomeLimpo)) {
+        throw new Error("Nome deve possuir apenas letras e espaços");
+    }
+
+    return nomeLimpo;
+}
+
+function validarCpf(cpf) {
+    if (typeof cpf != "string") {
+        throw new Error("CPF deve ser texto");
+    }
+
+    const cpfLimpo = cpf.trim();
+
+    if (cpfLimpo === "") {
+        throw new Error("CPF não pode ser vazio");
+    }
+
+    if (/[^\d\s.-]/.test(cpfLimpo)) {
+        throw new Error("CPF não deve conter letras ou caracteres especiais");
+    }
+
+    const cpfApenasDigitos = cpfLimpo.replace(/\D/g, "");
+
+    if (cpfApenasDigitos.length != 11) {
+        throw new Error("CPF deve conter 11 dígitos");
+    }
+
+    return cpfApenasDigitos;
+}
+
+function validarTelefone(telefone) {
+    if (typeof telefone != "string") {
+        throw new Error("Telefone deve ser texto");
+    }
+
+    const telefoneLimpo = telefone.trim();
+
+    if (telefoneLimpo === "") {
+        throw new Error("Telefone não pode ser vazio");
+    }
+
+    if (/[^\d\s\-()]/.test(telefoneLimpo)) {
+        throw new Error("Telefone só deve possuir números, traços e parênteses");
+    }
+
+    const telefoneApenasDigitos = telefoneLimpo.replace(/\D/g, "");
+
+    if (telefoneApenasDigitos.length != 10 && telefoneApenasDigitos.length != 11) {
+        throw new Error("Telefone deve conter 10 ou 11 dígitos");
+    }
+
+    return telefoneApenasDigitos;
+}
+
+function validarCidade(cidade) {
+    if (typeof cidade != "string") {
+        throw new Error("Cidade deve ser texto");
+    }
+
+    const cidadeLimpa = cidade.trim();
+
+    if (cidadeLimpa === "") {
+        throw new Error("Cidade não pode ser vazia");
+    }
+
+    if (!/^[A-Za-zÀ-ÿ\s']+$/.test(cidadeLimpa)) {
+        throw new Error("Cidade deve possuir apenas letras e espaços");
+    }
+
+    return cidadeLimpa;
+}
+
 function validarTextoSimples(valor) {
   return /^[A-Za-zÀ-ÿ\s']+$/.test(valor);
 }
 
 function validarEndereco(endereco) {
-  const palavras = endereco.trim().split(/\s+/);
-  
-  // Em endereços, só rejeita letras isoladas que NÃO sejam artigos/preposições
-  const palavrasValidas = ["a", "à", "e", "o"];
-  
-  const letrasSozinhas = palavras.filter(p => 
-    p.length === 1 && 
-    !p.includes('.') &&
-    !palavrasValidas.includes(p.toLowerCase())
-  );
+    if (typeof endereco != "string") {
+        throw new Error("Endereço deve ser texto");
+    }
+
+    const enderecoLimpo = endereco.trim();
+
+    if (enderecoLimpo === "") {
+        throw new Error("Endereço não pode ser vazio");
+    }
+
+    return enderecoLimpo;
+}
   
   if (letrasSozinhas.length > 0) {
     const erro = new Error(
@@ -195,9 +281,13 @@ function validarTextoLivre(valor, nomeCampo, tamanhoMaximo) {
 
 
 module.exports = {
+  validarNome,
+  validarCpf,
+  validarTelefone,
+  validarEndereco,
+  validarCidade,
   validarCamposVazios,
   validarTextoSimples,
-  validarEndereco,
   cpfContemCaracterInvalido,
   validarId,
   validarIdentificador,
