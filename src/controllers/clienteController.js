@@ -7,20 +7,14 @@ const clienteController = {
     try {
       const dados = req.body;
 
-      if (!dados || Object.keys(dados).length === 0) {
-        return res.status(400).json({ erro: "Requisição inválida" });
-      }
+      const camposNecessarios = ['nome', 'cpf', 'telefone', 'endereco', 'cidade'];
+      validarCamposObrigatorios(dados, camposNecessarios);
 
-      const cliente = {
-        nome: dados.nome,
-        cpf: dados.cpf, 
-        telefone: dados.telefone,
-        endereco: dados.endereco,
-        cidade: dados.cidade,
-      };
+      const camposPermitidos = ['nome', 'cpf', 'telefone', 'endereco', 'cidade'];
+      const camposWhiteList = selecionarCampos(dados, camposPermitidos);
 
-      const clienteNovo = await clienteService.criar(cliente);
-      return res.status(201).json(clienteNovo);
+      const cliente = await clienteService.criar(camposWhiteList);
+      return res.status(201).json(cliente);
     } catch (erro) {
       return tratarErro(res, erro);
     }
