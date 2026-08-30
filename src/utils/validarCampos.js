@@ -78,15 +78,15 @@ return id_Numerico;
 
 
 
-function validarCampoEnumTipo(tipo) {
-  if(typeof tipo != "string"){
-    throw new Error("Tipo deve ser string");
+function validarCampoEnum(campo,tipos) {
+  if(typeof campo != "string"){
+    throw new Error(`${campo} deve ser string`);
   }
-  if (!tipos.includes(tipo)){
-    throw new Error("Tipo inválido");
+  if (!tipos.includes(campo)){
+    throw new Error(`${campo} inválido`);
   }
 
-  return tipo;
+  return campo;
 }  
 
 function validarTextoSimplesOpcional(valor) {
@@ -189,7 +189,7 @@ module.exports = {
   cpfContemCaracterInvalido,
   validarId,
   validarIdentificador,
-  validarCampoEnumTipo,
+  validarCampoEnum,
   validarTextoSimplesOpcional,
   validarLocal,
   validarMarca,
