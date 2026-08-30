@@ -76,18 +76,6 @@ if(id_Numerico == 0){
 return id_Numerico;
 }
 
-const tipos = [
-    "acj",
-    "hi-wall",
-    "piso-teto",
-    "multi-split",
-    "cassete",
-    "self-contained",
-    "built-in",
-    "vrf",
-    "fan-coil",
-    "roof-top",
-  ];
 
 
 function validarCampoEnumTipo(tipo) {
