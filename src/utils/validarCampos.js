@@ -177,6 +177,18 @@ function validarCamposObrigatorios(dados, camposNecessarios){
   
 }
 
+function validarTextoLivre(valor, nomeCampo, tamanhoMaximo) {
+    if (typeof valor != "string") {
+        throw new Error(`${nomeCampo} deve ser string`);
+    }
+
+    if (valor.length > tamanhoMaximo) {
+        throw new Error(`${nomeCampo} não pode ultrapassar ${tamanhoMaximo} caracteres`);
+    }
+
+    return valor;
+}
+
 
 
 
@@ -196,4 +208,5 @@ module.exports = {
   validarModelo,
   validarSerie,
   validarCamposObrigatorios,
+  validarTextoLivre,
 };
