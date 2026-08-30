@@ -1,6 +1,7 @@
 const ordemService = require("../services/ordemService");
 const tratarErro = require("../utils/tratarErro");
 const {validarCamposObrigatorios, validarId} = require("../utils/validarCampos");
+const selecionarCampos = require("../utils/selecaoDeCampos");
 
 const ordemController = {
   async criar(req, res) {
@@ -9,10 +10,27 @@ const ordemController = {
 
         const camposNecessarios = ['cliente_id', 'tipo_servico', 'status'];
 
-        const camposObrigatorios = validarCamposObrigatorios(dados,camposNecessarios);
+        validarCamposObrigatorios(dados,camposNecessarios);
+
+        const camposPermitidos = [
+           'cliente_id',
+        'equipamento_id',
+        'tecnico_id',
+        'tipo_servico',
+        'status',
+        'problema',
+        'diagnostico',
+        'solucao',
+        'detalhes',
+        'materiais',
+        'checklist',
+        'mao_de_obra',
+        ];
+
+        const camposWhiteList = selecionarCampos(dados,camposPermitidos);
 
       
-      const ordem = await ordemService.criar(camposObrigatorios);
+      const ordem = await ordemService.criar(camposWhiteList);
       res.status(201).json(ordem);
     } catch (erro) {
       return tratarErro(res, erro);
