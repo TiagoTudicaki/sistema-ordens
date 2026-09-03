@@ -2,6 +2,7 @@ const clienteService = require("../services/clienteService");
 const { tratarErro } = require("../utils/tratarErro");
 const { validarIdPositivoInt,validarCamposObrigatorios } = require("../utils/validarCampos");
 const selecionarCampos = require("../utils/selecaoDeCampos");
+const filtrarCampos = require("../utils/filtragemDeConsulta");
 
 const clienteController = {
   async criar(req, res) {
@@ -23,21 +24,21 @@ const clienteController = {
 
   async listar(req, res) {
 
-    const dados = req.query;
-
-    if(!dados || Object.keys(dados).length === 0 ){
-      return res.status(400).json({erro:"Requisição invalida"})
-    }
     try {
-      const campos = {
-        nome: dados.nome,
-        cpf: dados.cpf,
-        telefone: dados.telefone,
-        endereco: dados.endereco,
-        cidade: dados.cidade,
-      };
+      
+      const dados = req.query;
 
-      const clientes = await clienteService.listar(campos);
+      const camposPermitidos = [
+        'nome',
+        'cpf',
+        'telefone',
+        'endereco',
+        'cidade',
+      ]
+
+      const camposWhiteList = filtrarCampos(dados,camposPermitidos);
+
+      const clientes = await clienteService.listar(camposWhiteList);
       return res.status(200).json(clientes);
     } catch (erro) {
       return tratarErro(res, erro);
