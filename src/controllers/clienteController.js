@@ -1,6 +1,7 @@
 const clienteService = require("../services/clienteService");
 const { tratarErro } = require("../utils/tratarErro");
-const { validarIdPositivoInt } = require("../utils/validarCampos");
+const { validarIdPositivoInt,validarCamposObrigatorios } = require("../utils/validarCampos");
+const selecionarCampos = require("../utils/selecaoDeCampos");
 
 const clienteController = {
   async criar(req, res) {
