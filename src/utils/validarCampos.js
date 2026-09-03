@@ -106,16 +106,8 @@ function validarEndereco(endereco) {
     return enderecoLimpo;
 }
   
-  if (letrasSozinhas.length > 0) {
-    const erro = new Error(
-      'Endereço parece incompleto. Verifique se há espaços extras.'
-    );
-    erro.status = 400;
-    throw erro;
-  }
-  
-  return endereco;
-}
+
+
 function cpfContemCaracterInvalido(cpf) {
   return /[^\d\s.-]/.test(cpf);
 }
