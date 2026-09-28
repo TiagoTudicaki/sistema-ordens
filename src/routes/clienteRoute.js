@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.post("/clientes", clienteController.criar);
 router.get("/clientes", clienteController.listar);
+router.get("/clientes/cpf/:cpf", clienteController.buscarPorCpf);
 router.get("/clientes/:id", clienteController.buscarPorId);
 router.put("/clientes/:id", clienteController.atualizar);
 router.delete("/clientes/:id", clienteController.excluir);
