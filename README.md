@@ -245,8 +245,8 @@ USE sistema_ordens;
 
 CREATE TABLE clientes (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(100) NOT NULL,
   cpf VARCHAR(11) NOT NULL UNIQUE,
+  nome VARCHAR(100) NOT NULL,
   telefone VARCHAR(20) NOT NULL,
   endereco VARCHAR(100) NOT NULL,
   cidade VARCHAR(50) NOT NULL,
@@ -265,7 +265,7 @@ CREATE TABLE tecnicos (
 CREATE TABLE equipamentos (
   id INT NOT NULL AUTO_INCREMENT,
   cliente_id INT NOT NULL,
-  tipo ENUM('acj','hi-wall','piso-teto','multi-split','cassete','self-contained','built-in','vrf','fan-coil','roof-top') DEFAULT NULL,
+  tipo ENUM('split', 'acj', 'cassete') DEFAULT NULL,
   local VARCHAR(50) NOT NULL,
   identificador VARCHAR(4) NOT NULL,
   marca VARCHAR(50) DEFAULT NULL,
