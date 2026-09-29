@@ -22,8 +22,8 @@ const clienteController = {
       const dados = req.body;
 
       const camposNecessarios = [
-        "nome",
         "cpf",
+        "nome",
         "telefone",
         "endereco",
         "cidade",
@@ -31,8 +31,8 @@ const clienteController = {
       validarCamposObrigatorios(dados, camposNecessarios);
 
       const camposPermitidos = [
-        "nome",
         "cpf",
+        "nome",
         "telefone",
         "endereco",
         "cidade",
