@@ -14,6 +14,9 @@ const clienteService = {
     const cpfValido = validarCpf(cpf);
 
     const clienteExistente = await clienteModel.buscarPorCpf(cpfValido);
+    if(clienteExistente === undefined){
+      return null;
+    }
     return clienteExistente;
   },
 
