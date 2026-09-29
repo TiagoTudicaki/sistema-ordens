@@ -1,6 +1,18 @@
 const db = require("../config/database");
+const { buscarPorCpf } = require("../services/clienteService");
 
 const clienteModel = {
+
+  async buscarPorCpf(cpfValido){
+    const [resultado] = await db.query("SELECT id, nome, telefone, endereco, cidade FROM clientes WHERE cpf = ?",
+      [cpfValido]
+    );
+
+    console.log(resultado);
+    console.log(resultado[0]);
+    return resultado[0];
+  },
+
   async criar(cliente) {
     const { nome, cpf, telefone, endereco, cidade } = cliente;
     const [resultado] = await db.query(
