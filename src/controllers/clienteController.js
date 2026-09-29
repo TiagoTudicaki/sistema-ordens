@@ -1,18 +1,42 @@
 const clienteService = require("../services/clienteService");
 const { tratarErro } = require("../utils/tratarErro");
-const { validarIdPositivoInt,validarCamposObrigatorios } = require("../utils/validarCampos");
+const {
+  validarIdPositivoInt,
+  validarCamposObrigatorios,
+} = require("../utils/validarCampos");
 const selecionarCampos = require("../utils/selecaoDeCampos");
 const filtrarCampos = require("../utils/filtragemDeConsulta");
 
 const clienteController = {
+  async buscarPorCpf(req, res) {
+    try {
+      const { cpf } = req.params;
+      const clienteExistente = await clienteService.buscarPorCpf(cpf);
+      return res.json(clienteExistente);
+    } catch (erro) {
+      return tratarErro(res, erro);
+    }
+  },
   async criar(req, res) {
     try {
       const dados = req.body;
 
-      const camposNecessarios = ['nome', 'cpf', 'telefone', 'endereco', 'cidade'];
+      const camposNecessarios = [
+        "nome",
+        "cpf",
+        "telefone",
+        "endereco",
+        "cidade",
+      ];
       validarCamposObrigatorios(dados, camposNecessarios);
 
-      const camposPermitidos = ['nome', 'cpf', 'telefone', 'endereco', 'cidade'];
+      const camposPermitidos = [
+        "nome",
+        "cpf",
+        "telefone",
+        "endereco",
+        "cidade",
+      ];
       const camposWhiteList = selecionarCampos(dados, camposPermitidos);
 
       const cliente = await clienteService.criar(camposWhiteList);
@@ -23,20 +47,18 @@ const clienteController = {
   },
 
   async listar(req, res) {
-
     try {
-      
       const dados = req.query;
 
       const camposPermitidos = [
-        'nome',
-        'cpf',
-        'telefone',
-        'endereco',
-        'cidade',
-      ]
+        "nome",
+        "cpf",
+        "telefone",
+        "endereco",
+        "cidade",
+      ];
 
-      const camposWhiteList = filtrarCampos(dados,camposPermitidos);
+      const camposWhiteList = filtrarCampos(dados, camposPermitidos);
 
       const clientes = await clienteService.listar(camposWhiteList);
       return res.status(200).json(clientes);
