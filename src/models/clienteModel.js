@@ -22,8 +22,8 @@ const clienteModel = {
 
     return {
       id: resultado.insertId,
-      nome,
       cpf,
+      nome,
       telefone,
       endereco,
       cidade,
