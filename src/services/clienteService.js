@@ -23,8 +23,8 @@ const clienteService = {
   async criar(camposWhiteList) {
     
     const dadosValidos = {
-      nome: padronizarTexto(validarNome(camposWhiteList.nome)),
       cpf: validarCpf(camposWhiteList.cpf),
+      nome: padronizarTexto(validarNome(camposWhiteList.nome)),
       telefone: validarTelefone(camposWhiteList.telefone),
       endereco: padronizarEndereco(validarEndereco(camposWhiteList.endereco)),
       cidade: padronizarTexto(validarCidade(camposWhiteList.cidade)),
