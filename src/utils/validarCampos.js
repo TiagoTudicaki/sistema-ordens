@@ -252,6 +252,7 @@ function validarCamposObrigatorios(dados, camposNecessarios){
     
   }
 
+  return dados;
   
 }
 
