@@ -287,31 +287,32 @@ CREATE TABLE precos (
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE `ordens` (
-  id int NOT NULL AUTO_INCREMENT,
-  cliente_id int NOT NULL,
-  equipamento_id int DEFAULT NULL,
-  tecnico_id int DEFAULT NULL,
-  tipo_servico enum('corretiva','instalacao','pmoc','preventiva') NOT NULL,
-  status enum('aberta','em_andamento','aguardando_peca','finalizada','cancelada') DEFAULT 'aberta',
-  problema text,
-  diagnostico text,
-  solucao text,
-  detalhes json DEFAULT NULL,
-  materiais json DEFAULT NULL,
-  checklist json DEFAULT NULL,
-  criado_em timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  finalizado_em timestamp NULL DEFAULT NULL,
-  custo_total decimal(10,2) DEFAULT '0.00',
-  mao_de_obra decimal(10,2) DEFAULT '0.00',
-  PRIMARY KEY (id),
-  KEY fk_ordens_cliente (cliente_id),
-  KEY fk_ordens_equipamento (equipamento_id),
-  KEY fk_ordens_tecnico (tecnico_id),
-  CONSTRAINT fk_ordens_cliente FOREIGN KEY (cliente_id) REFERENCES clientes (id) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT fk_ordens_equipamento FOREIGN KEY (equipamento_id) REFERENCES equipamentos (id) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT fk_ordens_tecnico FOREIGN KEY (tecnico_id) REFERENCES tecnicos (id) ON DELETE SET NULL ON UPDATE CASCADE
-) ;
+CREATE TABLE ordens (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id INT NOT NULL,
+  equipamento_id INT NULL,
+  tecnico_id INT NULL,
+  problema TEXT NOT NULL,
+  tipo_servico ENUM('manutencao','instalacao') NULL,
+  categoria ENUM('preventiva','corretiva') NULL,
+  executar ENUM('retirada','no_local') NULL,
+  componente ENUM('evaporador','condensador','evaporador_condensador') NULL,
+  status ENUM('aberta','em_andamento','aguardando_peca','finalizada','cancelada')
+    NOT NULL DEFAULT 'aberta',
+  diagnostico TEXT NULL,
+  solucao TEXT NULL,
+  materiais JSON NULL,
+  mao_de_obra DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  custo_total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  finalizado_em TIMESTAMP NULL,
+  CONSTRAINT fk_ordens_cliente
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE RESTRICT,
+  CONSTRAINT fk_ordens_equipamento
+    FOREIGN KEY (equipamento_id) REFERENCES equipamentos(id) ON DELETE SET NULL,
+  CONSTRAINT fk_ordens_tecnico
+    FOREIGN KEY (tecnico_id) REFERENCES tecnicos(id) ON DELETE SET NULL
+);
 ```
 
 **5. Inicie o servidor**
