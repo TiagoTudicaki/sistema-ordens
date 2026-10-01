@@ -1,37 +1,21 @@
 const ordemService = require("../services/ordemService");
 const tratarErro = require("../utils/tratarErro");
-const {validarCamposObrigatorios, validarId} = require("../utils/validarCampos");
+const {
+  validarCamposObrigatorios,
+  validarId,
+} = require("../utils/validarCampos");
 const selecionarCampos = require("../utils/selecaoDeCampos");
 
 const ordemController = {
   async criar(req, res) {
     try {
-        const dados = req.body;
-
-        const camposNecessarios = ['cliente_id', 'tipo_servico', 'status'];
-
-        validarCamposObrigatorios(dados,camposNecessarios);
-
-        const camposPermitidos = [
-           'cliente_id',
-        'equipamento_id',
-        'tecnico_id',
-        'tipo_servico',
-        'status',
-        'problema',
-        'diagnostico',
-        'solucao',
-        'detalhes',
-        'materiais',
-        'checklist',
-        'mao_de_obra',
-        ];
-
-        const camposWhiteList = selecionarCampos(dados,camposPermitidos);
-
-      
-      const ordem = await ordemService.criar(camposWhiteList);
+      if(req.body === undefined || Object.keys(req.body).length === 0){
+      throw new Error("Requisição não pode ser vazia");
+    } 
+     const dados = req.body; 
+       const ordem = await ordemService.criar(dados);
       res.status(201).json(ordem);
+     
     } catch (erro) {
       return tratarErro(res, erro);
     }
