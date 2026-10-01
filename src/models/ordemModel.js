@@ -1,47 +1,19 @@
 const db = require("../config/database");
 
 const ordemModel = {
-  async criar({
-    cliente_id,
-    equipamento_id,
-    tecnico_id,
-    tipo_servico,
-    problema,
-    diagnostico,
-    solucao,
-    detalhes,
-    materiais,
-    checklist,
-  }) {
-    const [novaOrdem] = await db.query(
-      "INSERT INTO ordens(cliente_id, equipamento_id, tecnico_id, tipo_servico, problema, diagnostico, solucao, detalhes, materiais, checklist)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        cliente_id,
-        equipamento_id || null,
-        tecnico_id || null,
-        tipo_servico,
-        problema || null,
-        diagnostico || null,
-        solucao || null,
-        detalhes || null,
-        materiais || null,
-        checklist || null,
-      ],
+  async criar(dadosValidados){
+    const {cliente_id, problema} = dadosValidados;
+    const [resultado] = await db.query(
+      "INSERT INTO ordens (cliente_id, problema) VALUES (?, ?)",
+      [cliente_id, problema]
     );
-
     return {
-      id: novaOrdem.insertId,
+      id: resultado.insertId,
       cliente_id,
-      equipamento_id,
-      tecnico_id,
-      tipo_servico,
       problema,
-      diagnostico,
-      solucao,
-      detalhes,
-      materiais,
-      checklist,
     };
+
+
   },
 
   async listar() {
