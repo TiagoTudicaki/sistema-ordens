@@ -32,15 +32,19 @@ const ordemController = {
 
   async buscarPorId(req, res) {
     try {
-      const { id } = req.params;
 
-      if (!id || isNaN(id)) {
-        return res.status(400).json({ erro: "ID invalído" });
+      if(req.params === undefined || Object.keys(req.params).length === 0){
+        const erro = new Error("Requisição não pode ser vazia");
+        throw erro;
       }
+      
+      const {id} = req.params;
+      
 
       const ordem = await ordemService.buscarPorId(id);
       res.status(200).json(ordem);
-    } catch (erro) {
+
+      }catch (erro) {
       return tratarErro(res, erro);
     }
   },
