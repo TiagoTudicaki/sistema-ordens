@@ -42,7 +42,8 @@ const ordemService = {
   },
 
   async buscarPorId(id) {
-    const ordem = await ordemModel.buscarPorId(id);
+    const idValidado = validarId(id);
+    const ordem = await ordemModel.buscarPorId(idValidado);
     return ordem;
   },
 
