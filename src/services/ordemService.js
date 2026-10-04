@@ -44,6 +44,13 @@ const ordemService = {
   async buscarPorId(id) {
     const idValidado = validarId(id);
     const ordem = await ordemModel.buscarPorId(idValidado);
+
+      if (!ordem) {
+      const erro = new Error("Ordem não encontrada");
+      erro.status = 404;
+      throw erro;
+    }
+    
     return ordem;
   },
 
