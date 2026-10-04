@@ -51,45 +51,19 @@ const ordemController = {
 
   async atualizar(req, res) {
     try {
-      const { id } = req.params;
-
-      if (!id || isNaN(id)) {
-        return res.status(400).json({ erro: "ID invalído" });
+      if(req.params === undefined || Object.keys(req.params).length === 0){
+        const erro = new Error("Requisição não pode ser vazia");
+        throw erro;
       }
 
-      if (Object.values(req.body).every((campo) => !campo)) {
-        return res
-          .status(400)
-          .json({ erro: "É necessário atualizar pelo menos um campo" });
+      if(req.body === undefined || Object.keys(req.body).length === 0){
+        const erro = new Error("Requisição não pode ser vazia");
+        throw erro;
       }
 
-      const {
-        cliente_id,
-        equipamento_id,
-        tecnico_id,
-        tipo_servico,
-        status,
-        problema,
-        diagnostico,
-        solucao,
-        detalhes,
-        materiais,
-        checklist,
-      } = req.body;
+      const {id} = req.params;
 
-      const dados = {
-        cliente_id,
-        equipamento_id,
-        tecnico_id,
-        tipo_servico,
-        status,
-        problema,
-        diagnostico,
-        solucao,
-        detalhes,
-        materiais,
-        checklist,
-      };
+      const dados = req.body;
 
       const ordem = await ordemService.atualizar(id, dados);
       res.status(200).json(ordem);
