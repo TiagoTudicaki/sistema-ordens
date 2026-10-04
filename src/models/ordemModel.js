@@ -35,45 +35,36 @@ const ordemModel = {
 
   async buscarPorId(id) {
     const [ordem] = await db.query(
-      `SELECT 
-            c.nome AS cliente_nome,
-            c.telefone AS cliente_telefone,
-            c.endereco AS cliente_endereco,
-            c.cidade AS cliente_cidade,
-            o.tipo_servico AS ordem_tipo_servico,
-            o.status AS ordem_status,
-            o.problema AS ordem_problema,
-            o.diagnostico AS ordem_diagnostico,
-            o.solucao AS ordem_solucao,
-            o.detalhes AS ordem_detalhes,
-            o.materiais AS ordem_materiais,
-            o.checklist AS ordem_checklist,
-            o.custo_total AS ordem_custo_total,
-            e.tipo AS equipamento_tipo,
-            e.local AS equipamento_local,
-            e.identificador AS equipamento_identificador,
-            e.marca AS equipamento_marca,
-            e.modelo AS equipamento_modelo,
-            e.serie AS equipamento_serie,
-            e.capacidade_btu AS equipamento_capacidade_btu,
-            e.tipo_gas AS equipamento_tipo_gas,
-            t.nome AS tecnico_nome,
-            o.criado_em AS ordem_criado_em,
-            o.finalizado_em AS ordem_finalizado_em
-        FROM ordens o
-        LEFT JOIN clientes c ON o.cliente_id = c.id
-        LEFT JOIN equipamentos e ON o.equipamento_id = e.id
-        LEFT JOIN tecnicos t ON o.tecnico_id = t.id
-            WHERE o.id = ?`,
+      `SELECT
+      ordens.id,
+      ordens.problema,
+      ordens.status,
+      ordens.tipo_servico,
+      ordens.categoria,
+      ordens.executar,
+      ordens.componente,
+      ordens.diagnostico,
+      ordens.solucao,
+      ordens.materiais,
+      ordens.mao_de_obra,
+      ordens.custo_total,
+      tecnicos.nome As tecnico_nome,
+      clientes.nome As cliente_nome,
+      clientes.endereco As cliente_endereco,
+      clientes.cidade As cliente_cidade,
+      clientes.telefone As cliente_telefone,
+      equipamentos.tipo As equipamento_tipo,
+      equipamentos.local As equipamento_local,
+      equipamentos.identificador As equipamento_identificador,
+      equipamentos.capacidade_btu As equipamento_capacidade_btu
+       FROM ordens
+       LEFT JOIN clientes ON ordens.cliente_id = clientes.id
+       LEFT JOIN tecnicos ON ordens.tecnico_id = tecnicos.id
+       LEFT JOIN equipamentos ON ordens.equipamento_id = equipamentos.id
+        WHERE ordens.id = ?`,
       [id],
     );
-
-    if (!ordem[0]) {
-      const erro = new Error("Ordem não encontrada");
-      erro.status = 404;
-      throw erro;
-    }
-
+    
     return ordem[0];
   },
 
