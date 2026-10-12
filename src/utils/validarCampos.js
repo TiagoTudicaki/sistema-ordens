@@ -268,6 +268,24 @@ function validarTextoLivre(valor, nomeCampo, tamanhoMaximo) {
     return valor;
 }
 
+function validarMateriais(materiais, { exigirPreco }) {
+  if (!Array.isArray(materiais)) {
+    throw new Error("Materiais deve ser uma lista");
+  }
+
+  for (const item of materiais) {
+
+    if (exigirPreco && item.valor_uni == null) {
+      throw new Error(`Informe o valor do item ${item.nome}`);
+    }
+    if (item.valor_uni != null && typeof item.valor_uni !== "number") {
+      throw new Error("valor_uni deve ser número");
+    }
+  }
+
+  return materiais;
+}
+
 
 
 
@@ -292,4 +310,5 @@ module.exports = {
   validarSerie,
   validarCamposObrigatorios,
   validarTextoLivre,
+  validarMateriais,
 };
